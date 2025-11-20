@@ -23,7 +23,7 @@ Options
 - `--seo`: Path to `seo.json` (default: seo.json)
 - `--out`: Output directory (default: public)
 - `--overwrite`: Overwrite existing OG files (default: skip existing)
- - `--cleanup`: Delete unreferenced OG images (files under `public/images` with `og-` prefix and files under `public/articles` not referenced in `seo.json`).
+ - `--cleanup`: Delete unreferenced OG images (files under `public/images` with `og-` prefix).
  - `--dry-run`: When used with `--cleanup`, list files that would be deleted without deleting them.
 
 How it works

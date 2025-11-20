@@ -95,7 +95,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                 continue
 
             # Determine local filepath for OG image
-            # ogImage may be '/images/og/og-home.webp' or '/images/articles/foo.webp'
+            # ogImage may be '/images/og/og-home.webp'
             if og_image.startswith('/'):
                 dest_rel = og_image[1:]
             else:
@@ -142,10 +142,9 @@ def get_referenced_images_from_seo(seo: Dict[str, Any]) -> set:
 
 
 def cleanup_orphaned_images(out_dir: str, referenced: set, dry_run: bool = True):
-    # We'll only consider webp images under out_dir/images/** and out_dir/images/articles/**
+    # We'll only consider webp images under out_dir/images/**
     out = Path(out_dir)
     images_root = out / 'images'
-    articles_root = out / 'articles'
     to_delete = []
 
     # Check images folder for files starting with og-
@@ -156,17 +155,6 @@ def cleanup_orphaned_images(out_dir: str, referenced: set, dry_run: bool = True)
                     continue
                 # only consider files with 'og-' prefix in the filename
                 if not fname.startswith('og-'):
-                    continue
-                rel = os.path.relpath(os.path.join(root, fname), out_dir)
-                norm = rel.replace('\\', '/').lower()
-                if norm not in referenced:
-                    to_delete.append(Path(root) / fname)
-
-    # Check articles folder for webp files (article images used as OGs)
-    if articles_root.exists():
-        for root, _, files in os.walk(articles_root):
-            for fname in files:
-                if not fname.lower().endswith('.webp'):
                     continue
                 rel = os.path.relpath(os.path.join(root, fname), out_dir)
                 norm = rel.replace('\\', '/').lower()
