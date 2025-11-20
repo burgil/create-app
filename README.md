@@ -15,6 +15,7 @@ Run directly from GitHub using `npx` (no install):
 npx github:burgil/create-app my-project-name
 ```
 > **Warning:** Ensure you review and agree to the [Template TOS](./template/TOS.md) before proceeding, as it outlines important usage terms and conditions.
+
 ![cli-preview](cli-preview.png)
 
 ## Links
