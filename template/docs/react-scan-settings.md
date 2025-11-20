@@ -1,4 +1,6 @@
 # Add this to your index.html head to configure react scan (slows down development page loading time but lets you debug react issues visually - also requires configuration in the vite config)
+
+```html
 <script>
   const didInit = localStorage.getItem('init-dev');
 
@@ -47,3 +49,4 @@
     localStorage.setItem('init-dev', true);
   }
 </script>
+```

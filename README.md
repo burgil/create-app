@@ -37,10 +37,6 @@ How it works
 
 The CLI is a tiny Node script located at `bin/index.js`. It copies the `template` folder included in this repo to the destination path.
 
-## License
-
-This project is licensed under the MIT License.
-
 ## 🚀 Why This Template is Epic
 
 ### The Problem We Solve
@@ -182,13 +178,13 @@ Perfect for:
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions!
 
 ## 📄 License & Terms
 
-This template is provided under the MIT License. See [LICENSE](LICENSE) for details.
+This template is provided under the MIT License.
 
-**Usage Terms**: By using this template, you agree to the [Terms of Service](TOS.md).
+**Usage Terms**: By using this template, you agree to the [Terms of Service](template/TOS.md).
 
 ## 🌟 Community
 
@@ -197,7 +193,7 @@ This template is provided under the MIT License. See [LICENSE](LICENSE) for deta
 
 ## 🎯 Next Steps
 
-1. **Read** [Getting Started](docs/getting-started.md) to build your first page
+1. **Read** [Getting Started](template/docs/getting-started.md) to build your first page
 2. **Customize** colors, fonts, and content in `tailwind.config.js` and `src/`
 3. **Deploy** to Cloudflare Pages or Vercel (takes 2 minutes)
 4. **Ship** your epic project to the world 🚀
