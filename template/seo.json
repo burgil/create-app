@@ -1,0 +1,48 @@
+﻿{
+  "_global": {
+    "siteName": "Create App Template",
+    "domain": "https://example.com",
+    "defaultRobots": "index, follow",
+    "defaultImage": "/images/og/og-default.webp",
+    "logo": "/images/logo.webp",
+    "social": {
+      "github": "https://github.com/burgil",
+      "youtube": "https://youtube.com/@BurgilBuilds"
+    },
+    "contact": {
+      "email": "contact@example.com",
+      "type": "Support"
+    },
+    "organization": {
+      "name": "Create App Template",
+      "description": "A minimal Vite + React starter template for quick bootstrapping.",
+      "url": "https://example.com"
+    }
+  },
+  "/": {
+    "title": "Create App Template - Vite + React",
+    "description": "A minimal Vite + React landing page template designed to be a starting point for your project.",
+    "keywords": "vite,react,starter,template,create-app",
+    "canonical": "https://example.com/",
+    "ogType": "website",
+    "ogImage": "/images/og/og-home.webp",
+    "twitterCard": "summary_large_image",
+    "sitemap": {
+      "changefreq": "daily",
+      "priority": 1.0
+    }
+  },
+  "/about": {
+    "title": "About - Create App Template",
+    "description": "About this starter template and how to use it.",
+    "keywords": "vite,react,template,starter,create-app",
+    "canonical": "https://example.com/about",
+    "ogType": "website",
+    "ogImage": "/images/og/og-about.webp",
+    "twitterCard": "summary",
+    "sitemap": {
+      "changefreq": "monthly",
+      "priority": 0.8
+    }
+  }
+}
