@@ -121,12 +121,12 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 
 ## 📚 Documentation
 
-- **[Getting Started](docs/getting-started.md)** - Your first 5 minutes
-- **[Architecture Guide](docs/architecture.md)** - How everything works
-- **[SEO Best Practices](docs/seo-guide.md)** - Maximize your search rankings
-- **[Deployment Guide](docs/deployment.md)** - Ship to production in minutes
-- **[Performance Optimization](docs/performance.md)** - Make it even faster
-- **[Customization Guide](docs/customization.md)** - Make it yours
+- **[Getting Started](template/docs/getting-started.md)** - Your first 5 minutes
+- **[Architecture Guide](template/docs/architecture.md)** - How everything works
+- **[SEO Best Practices](template/docs/seo-guide.md)** - Maximize your search rankings
+- **[Deployment Guide](template/docs/deployment.md)** - Ship to production in minutes
+- **[Performance Optimization](template/docs/performance.md)** - Make it even faster
+- **[Customization Guide](template/docs/customization.md)** - Make it yours
 
 ## 🎨 Example Pages Included
 
