@@ -12,7 +12,7 @@ export default function Hero() {
           rotate: [0, 5, 0]
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-32 right-20 w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl opacity-20 blur-xl"
+        className="absolute top-32 right-20 w-20 h-20 bg-linear-to-br from-yellow-400 to-orange-500 rounded-2xl opacity-20 blur-xl"
       />
       <motion.div
         animate={{ 
@@ -20,7 +20,7 @@ export default function Hero() {
           rotate: [0, -5, 0]
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-40 left-20 w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-20 blur-xl"
+        className="absolute bottom-40 left-20 w-32 h-32 bg-linear-to-br from-blue-400 to-purple-500 rounded-full opacity-20 blur-xl"
       />
       
       <div className="container mx-auto px-6 z-10">
@@ -64,7 +64,7 @@ export default function Hero() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
                 to="/about" 
-                className="group px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
+                className="group px-8 py-4 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
               >
                 Get Started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

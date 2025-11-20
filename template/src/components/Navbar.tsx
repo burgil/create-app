@@ -25,7 +25,7 @@ export default function Navbar() {
               <motion.div 
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
-                className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold"
+                className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold"
               >
                 C
               </motion.div>
@@ -73,7 +73,7 @@ export default function Navbar() {
               >
                 <Link 
                   to="/about" 
-                  className="px-5 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all"
+                  className="px-5 py-2 bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all"
                 >
                   Get Started
                 </Link>
