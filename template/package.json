@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm lint && tsc -b && cross-env NODE_ENV=production vite build && pnpm prerender && pnpm og-screenshots",
+    "build": "pnpm lint && cross-env NODE_ENV=production vite build && pnpm prerender && pnpm og-screenshots",
     "preview": "vite preview",
     "deploy": "echo \"Replace this with your deploy script\"",
-    "lint": "eslint . && depcheck && knip --production --dependencies --files",
+    "lint": "eslint . && tsc -b && knip --production --dependencies --files",
     "prerender": "tsx --tsconfig tsconfig.app.json scripts/prerender.ts",
     "og-screenshots": "python scripts/generate_og_screenshots.py --port 5173 --seo seo.json --cleanup"
   },
@@ -22,7 +22,6 @@
     "@typescript-eslint/parser": "^8.47.0",
     "@vitejs/plugin-react": "^5.1.1",
     "cross-env": "^10.1.0",
-    "depcheck": "^1.4.7",
     "eslint": "^9.39.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-react": "^7.37.5",
