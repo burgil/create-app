@@ -104,6 +104,9 @@ Shows off Framer Motion animations, Lucide icons, and modern design patterns.
 ### About Page
 Demonstrates TypeScript best practices, component composition, and accessible UI.
 
+### Suspense Example Page
+Interactive demonstration of React Suspense patterns including lazy loading, skeleton fallbacks, and performance optimization techniques.
+
 ## 🚀 Deploy Anywhere
 
 This template generates **100% static files**. Deploy to:
