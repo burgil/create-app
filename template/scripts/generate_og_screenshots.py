@@ -68,14 +68,14 @@ def ensure_dir_for_file(filepath: Path):
         dirpath.mkdir(parents=True, exist_ok=True)
 
 
-async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 630)):
+async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 630), wait_time: float = 1.2):
     print(f"{Colors.CYAN}-> Navigating to{Colors.RESET} {url}")
     await page.set_viewport_size({'width': viewport[0], 'height': viewport[1]})
     response = await page.goto(url, wait_until='networkidle', timeout=30000)
     if response is None or not (200 <= response.status < 400):
         print(f"{Colors.YELLOW}[WARN] Warning: Received status {response.status if response else 'None'} for {url}{Colors.RESET}")
     # Wait a bit for dynamic content and animations to settle
-    await asyncio.sleep(1.2)
+    await asyncio.sleep(wait_time)
     tmp_png = dest_path.with_suffix('.png')
     await page.screenshot(path=str(tmp_png), type='png', full_page=False)
     # Convert to webp using Pillow
@@ -99,7 +99,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
         # Test server connectivity before processing routes or prompting
         try:
             print(f"{Colors.BLUE}[TEST] Testing connection to {base_url}...{Colors.RESET}")
-            response = await page.goto(base_url, wait_until='networkidle', timeout=5000)
+            response = await page.goto(base_url, wait_until='networkidle', timeout=10000)
             if response is None or response.status >= 500:
                 print(f"\n{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} Server at {base_url} returned status {response.status if response else 'None'}")
                 print(f"{Colors.YELLOW}Please ensure the preview server is running with: {Colors.CYAN}pnpm preview{Colors.RESET}")
@@ -136,11 +136,11 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                     existing_count += 1
             
             if existing_count > 0:
-                # Prompt with a 5-second timeout that defaults to 'Y' (skip overwriting).
+                # Prompt with a 10-second timeout that defaults to 'Y' (skip overwriting).
                 prompt_text = f"{Colors.YELLOW}[?] Found {existing_count} existing OG image(s). Skip overwriting them? (Y/n):{Colors.RESET} "
                 print(prompt_text, end='', flush=True)
 
-                def timed_prompt(prompt: str, timeout: float = 5.0, default: str = 'y') -> str:
+                def timed_prompt(prompt: str, timeout: float = 10.0, default: str = 'y') -> str:
                     # Windows: use msvcrt to read characters without requiring Enter
                     if os.name == 'nt':
                         try:
@@ -174,7 +174,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                                 print()
                                 print(f"{Colors.CYAN}[INFO] No response after {int(timeout)} seconds, defaulting to skip overwriting{Colors.RESET}")
                                 return default
-                            time.sleep(0.05)
+                            time.sleep(0.1)
                     else:
                         # POSIX: select on stdin; user still must press Enter but we avoid a stuck thread
                         try:
@@ -195,7 +195,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                                 return default
 
                 # Run the prompt in an executor so we don't block the event loop
-                response = await asyncio.get_event_loop().run_in_executor(None, timed_prompt, prompt_text, 5.0, 'y')
+                response = await asyncio.get_event_loop().run_in_executor(None, timed_prompt, prompt_text, 10.0, 'y')
 
                 # Default: skip existing images unless user answers 'n' or 'no'
                 if response == 'n' or response == 'no':
@@ -213,7 +213,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             config = seo.get(route, {})
             og_image = config.get('ogImage')
             if not og_image:
-                print(f"{Colors.YELLOW}[SKIP] Skipping {route}: no ogImage configured{Colors.RESET}")
+                print(f"{Colors.BLUE}[SKIP] Skipping {route}: no ogImage configured{Colors.RESET}")
                 continue
 
             # Determine local filepath for OG image
@@ -227,7 +227,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             # Only target files prefixed with 'og-'. Skip other image types (e.g., article hero images).
             fname = dest_path.name
             if not fname.lower().startswith('og-'):
-                print(f"{Colors.YELLOW}[SKIP] Skipping {route}: ogImage '{og_image}' is not prefixed with 'og-' (not an OG image){Colors.RESET}")
+                print(f"{Colors.BLUE}[SKIP] Skipping {route}: ogImage '{og_image}' is not prefixed with 'og-' (not an OG image){Colors.RESET}")
                 continue
             if dest_path.exists() and not overwrite:
                 # print(f"OG image already exists for {route}, skipping: {dest_path}")
@@ -238,7 +238,9 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
 
             url = base_url + (route if route.startswith('/') else '/' + route)
             try:
-                await capture_page_to_webp(page, url, dest_path)
+                # Wait longer for the homepage, which often contains animated hero content
+                homepage_wait = 3.0 if route in ('/', '') else 1.2
+                await capture_page_to_webp(page, url, dest_path, wait_time=homepage_wait)
             except Exception as e:
                 print(f"{Colors.RED}[ERR] Error capturing {url}: {e}{Colors.RESET}")
 
