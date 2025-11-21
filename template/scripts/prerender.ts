@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Window } from 'happy-dom';
+import Beasties from 'beasties';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -289,7 +290,7 @@ async function parseRouterForRoutes(): Promise<RouteConfig[]> {
             });
         } else {
             if (componentName !== 'Layout') {
-                console.warn(`${colors.yellow}⚠️  Component ${componentName} not found in import map for route ${normalizedPath}${colors.reset}`);
+                console.warn(`${colors.yellow}  Component ${componentName} not found in import map for route ${normalizedPath}${colors.reset}`);
             }
         }
     }
@@ -299,7 +300,7 @@ async function parseRouterForRoutes(): Promise<RouteConfig[]> {
 
 async function prerenderRoute(route: RouteConfig): Promise<void> {
     try {
-        console.log(`${colors.cyan}🔄 Rendering${colors.reset} ${colors.bright}${route.path}${colors.reset} with component from ${path.basename(route.componentPath)} → ${colors.green}${route.outputPath}${colors.reset}`);
+        console.log(`${colors.cyan} Rendering${colors.reset} ${colors.bright}${route.path}${colors.reset} with component from ${path.basename(route.componentPath)}  ${colors.green}${route.outputPath}${colors.reset}`);
 
         if (!fs.existsSync(route.componentPath)) {
             throw new Error(`Component file not found: ${route.componentPath}`);
@@ -308,7 +309,7 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
         const componentPath = route.componentPath.replace(/\\/g, '/');
         const fileUrl = `file:///${componentPath}`;
 
-        console.log(`${colors.blue}📦 Importing:${colors.reset} ${fileUrl}`);
+        console.log(`${colors.blue} Importing:${colors.reset} ${fileUrl}`);
 
         const componentModule = await import(fileUrl);
         const Component = componentModule.default;
@@ -350,17 +351,47 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
+        // Apply Beasties to inline critical CSS
+        const distPath = path.resolve(__dirname, '../dist');
+        const beasties = new Beasties({
+            path: distPath,
+            publicPath: '/',
+            preload: 'swap',
+            pruneSource: true, // Remove inlined CSS from external stylesheets
+            inlineFonts: true,
+            preloadFonts: true,
+            compress: true,
+            logLevel: 'warn', // Reduce noise
+            minimumExternalSize: 5000, // If external CSS < 5kb after pruning, inline it all
+            mergeStylesheets: false, // Keep separate <style> tags for better caching
+            keyframes: 'critical', // Only inline critical animations
+            reduceInlineStyles: false, // Don't process inline <style> tags
+            allowRules: [
+                // Force-include interactive/hover states
+                /\.btn.*:hover/,
+                /\.btn.*:active/,
+                /\.btn.*:focus/,
+                /\.nav.*:hover/,
+                /:focus-visible/,
+                /\[data-state/,
+                /^\.sr-only$/,
+                /^\.hidden$/
+            ]
+        });
+
+        html = await beasties.process(html);
+
         fs.writeFileSync(outputPath, html);
-        console.log(`${colors.green}✅ Generated${colors.reset} ${route.outputPath} with SEO tags`);
+        console.log(`${colors.green} Generated${colors.reset} ${route.outputPath} with SEO tags + critical CSS`);
 
     } catch (error) {
-        console.error(`${colors.red}❌ Failed to render${colors.reset} ${route.path}:`, error);
+        console.error(`${colors.red} Failed to render${colors.reset} ${route.path}:`, error);
     }
 }
 
 async function prerender() {
     try {
-        console.log(`${colors.bright}${colors.cyan}🚀 Starting SSR prerendering with SEO optimization...${colors.reset}\n`);
+        console.log(`${colors.bright}${colors.cyan} Starting SSR prerendering with SEO optimization...${colors.reset}\n`);
 
         const window = new Window();
 
@@ -370,6 +401,12 @@ async function prerender() {
         global.document = window.document;
         // @ts-expect-error - Happy-dom
         global.getComputedStyle = window.getComputedStyle.bind(window);
+        // @ts-expect-error - Set SSR flag for components to detect
+        global.__SSR__ = true;
+        // @ts-expect-error - Mirror flag on window/globalThis so components can detect it reliably
+        window.__SSR__ = true;
+        // @ts-expect-error - Ensure globalThis also has the flag for environments referencing it directly
+        globalThis.__SSR__ = true;
 
         Object.defineProperty(global, 'navigator', {
             value: window.navigator,
@@ -390,13 +427,13 @@ async function prerender() {
         const routes = await parseRouterForRoutes();
 
         if (routes.length === 0) {
-            console.log(`${colors.yellow}⚠️  No routes found in Router.tsx to prerender${colors.reset}`);
+            console.log(`${colors.yellow}  No routes found in Router.tsx to prerender${colors.reset}`);
             return;
         }
 
-        console.log(`${colors.blue}📄 Found ${routes.length} route(s) in Router.tsx:${colors.reset}`);
+        console.log(`${colors.blue} Found ${routes.length} route(s) in Router.tsx:${colors.reset}`);
         routes.forEach(route => {
-            console.log(`   ${colors.bright}${route.path}${colors.reset} → dist/${route.outputPath}`);
+            console.log(`   ${colors.bright}${route.path}${colors.reset}  dist/${route.outputPath}`);
         });
         console.log('');
 
@@ -460,17 +497,17 @@ async function prerender() {
 
         // Early issue reporting (Optional)
         // if (routesWithoutSEO.length > 0) {
-        //     console.log(`${colors.yellow}⚠️  Warning: ${routesWithoutSEO.length} route(s) missing SEO configuration:${colors.reset}`);
+        //     console.log(`${colors.yellow}  Warning: ${routesWithoutSEO.length} route(s) missing SEO configuration:${colors.reset}`);
         //     routesWithoutSEO.forEach(path => {
-        //         console.log(`   ${colors.yellow}•${colors.reset} ${path}`);
+        //         console.log(`   ${colors.yellow}${colors.reset} ${path}`);
         //     });
         //     console.log('');
         // }
 
         // if (routesWithIncompleteFields.length > 0) {
-        //     console.log(`${colors.yellow}⚠️  Warning: ${routesWithIncompleteFields.length} route(s) missing required SEO fields:${colors.reset}`);
+        //     console.log(`${colors.yellow}  Warning: ${routesWithIncompleteFields.length} route(s) missing required SEO fields:${colors.reset}`);
         //     routesWithIncompleteFields.forEach(item => {
-        //         console.log(`   ${colors.yellow}•${colors.reset} ${colors.bright}${item.path}${colors.reset} missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
+        //         console.log(`   ${colors.yellow}${colors.reset} ${colors.bright}${item.path}${colors.reset} missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
         //     });
         //     console.log('');
         // }
@@ -480,60 +517,61 @@ async function prerender() {
         }
 
         // Generate sitemap.xml
-        console.log(`\n${colors.magenta}🗺️  Generating sitemap.xml...${colors.reset}`);
+        console.log(`\n${colors.magenta}  Generating sitemap.xml...${colors.reset}`);
         const sitemap = generateSitemap(routes);
         const sitemapPath = path.resolve(__dirname, '../dist/sitemap.xml');
         fs.writeFileSync(sitemapPath, sitemap);
-        console.log(`${colors.green}✅ Generated sitemap.xml${colors.reset}`);
+        console.log(`${colors.green} Generated sitemap.xml${colors.reset}`);
 
         // Generate robots.txt
-        console.log(`${colors.magenta}🤖 Generating robots.txt...${colors.reset}`);
+        console.log(`${colors.magenta} Generating robots.txt...${colors.reset}`);
         const robots = `User-agent: *
 Allow: /
 Sitemap: ${globalConfig.domain}/sitemap.xml`;
         const robotsPath = path.resolve(__dirname, '../dist/robots.txt');
         fs.writeFileSync(robotsPath, robots);
-        console.log(`${colors.green}✅ Generated robots.txt${colors.reset}`);
+        console.log(`${colors.green} Generated robots.txt${colors.reset}`);
 
         // Final summary
-        console.log(`\n${colors.bright}${colors.green}🎉 Successfully prerendered ${routes.length} page(s) with full SEO!${colors.reset}`);
+        console.log(`\n${colors.bright}${colors.green} Successfully prerendered ${routes.length} page(s) with full SEO!${colors.reset}`);
 
         const totalIssues = routesWithoutSEO.length + routesWithIncompleteFields.length + routesWithIncompleteSitemap.length;
 
         if (totalIssues > 0) {
-            console.log(`\n${colors.yellow}${colors.bright}⚠️  SEO WARNINGS (${totalIssues} total):${colors.reset}`);
+            console.log(`\n${colors.yellow}${colors.bright}  SEO WARNINGS (${totalIssues} total):${colors.reset}`);
 
             if (routesWithoutSEO.length > 0) {
                 console.log(`\n${colors.yellow}Routes using fallback SEO from "/" (${routesWithoutSEO.length}):${colors.reset}`);
                 routesWithoutSEO.forEach(path => {
-                    console.log(`   ${colors.yellow}•${colors.reset} ${path}`);
+                    console.log(`   ${colors.yellow}${colors.reset} ${path}`);
                 });
             }
 
             if (routesWithIncompleteFields.length > 0) {
                 console.log(`\n${colors.yellow}Routes with incomplete SEO fields (${routesWithIncompleteFields.length}):${colors.reset}`);
                 routesWithIncompleteFields.forEach(item => {
-                    console.log(`   ${colors.yellow}•${colors.reset} ${colors.bright}${item.path}${colors.reset} → missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
+                    console.log(`   ${colors.yellow}${colors.reset} ${colors.bright}${item.path}${colors.reset}  missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
                 });
             }
 
             if (routesWithIncompleteSitemap.length > 0) {
                 console.log(`\n${colors.yellow}Routes with incomplete sitemap fields (${routesWithIncompleteSitemap.length}):${colors.reset}`);
                 routesWithIncompleteSitemap.forEach(item => {
-                    console.log(`   ${colors.yellow}•${colors.reset} ${colors.bright}${item.path}${colors.reset} → missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
+                    console.log(`   ${colors.yellow}${colors.reset} ${colors.bright}${item.path}${colors.reset}  missing: ${colors.red}${item.missing.join(', ')}${colors.reset}`);
                 });
 
-                console.log(`\n${colors.cyan}💡 Fix: Add complete sitemap config (changefreq, priority) to seo.json for these routes${colors.reset}`);
+                console.log(`\n${colors.cyan} Fix: Add complete sitemap config (changefreq, priority) to seo.json for these routes${colors.reset}`);
             }
 
-            console.log(`\n${colors.cyan}💡 Fix: Add complete SEO config to seo.json for these routes${colors.reset}`);
+            console.log(`\n${colors.cyan} Fix: Add complete SEO config to seo.json for these routes${colors.reset}`);
         }
 
         window.close();
     } catch (error) {
-        console.error(`${colors.red}❌ Pre-render failed:${colors.reset}`, error);
+        console.error(`${colors.red} Pre-render failed:${colors.reset}`, error);
         process.exit(1);
     }
 }
 
 prerender();
+

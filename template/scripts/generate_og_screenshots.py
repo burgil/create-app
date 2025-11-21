@@ -5,7 +5,7 @@ generate_og_screenshots.py
 Create OG images by taking screenshots of each route defined in seo.json.
 
 Usage:
-    python scripts/generate_og_screenshots.py --host localhost --port 5173 --seo seo.json
+    python scripts/generate_og_screenshots.py --host localhost --port 4173 --seo seo.json
 
 Requirements:
   pip install -r scripts/requirements.txt
@@ -17,7 +17,7 @@ What it does:
   - If missing, opens the route at `http://{host}:{port}{routePath}`, screenshots the viewport sized 1200x630, and saves as webp to the target path.
 
 Notes:
-    - Defaults to `localhost:5173` since a server is expected to be running.
+    - Defaults to `localhost:4173` since a server is expected to be running.
   - Uses Playwright to render pages (headless), wait for network idle, and capture a screenshot.
 """
 import argparse
@@ -46,7 +46,7 @@ class Colors:
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate OG screenshots from routes in seo.json')
     parser.add_argument('--host', default='localhost', help='Local server host (default: localhost)')
-    parser.add_argument('--port', default=5173, type=int, help='Local server port (default: 5173)')
+    parser.add_argument('--port', default=4173, type=int, help='Local server port (default: 4173)')
     parser.add_argument('--cleanup', action='store_true', help='Delete orphaned OG images not referenced in seo.json')
     parser.add_argument('--dry-run', action='store_true', help='When used with --cleanup, list files that would be deleted without deleting')
     parser.add_argument('--seo', default='seo.json', help='Path to seo.json')
@@ -68,11 +68,11 @@ def ensure_dir_for_file(filepath: Path):
 
 
 async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 630)):
-    print(f"{Colors.CYAN}🔄 Navigating to{Colors.RESET} {url}")
+    print(f"{Colors.CYAN}-> Navigating to{Colors.RESET} {url}")
     await page.set_viewport_size({'width': viewport[0], 'height': viewport[1]})
     response = await page.goto(url, wait_until='networkidle', timeout=30000)
     if response is None or not (200 <= response.status < 400):
-        print(f"{Colors.YELLOW}⚠️  Warning: Received status {response.status if response else 'None'} for {url}{Colors.RESET}")
+        print(f"{Colors.YELLOW}[WARN] Warning: Received status {response.status if response else 'None'} for {url}{Colors.RESET}")
     # Wait a bit for dynamic content and animations to settle
     await asyncio.sleep(1.2)
     tmp_png = dest_path.with_suffix('.png')
@@ -81,7 +81,7 @@ async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 
     img = Image.open(tmp_png)
     img.save(dest_path, 'WEBP', quality=90, method=6)
     tmp_png.unlink()
-    print(f"{Colors.GREEN}✅ Saved OG image to{Colors.RESET} {dest_path}")
+    print(f"{Colors.GREEN}[OK] Saved OG image to{Colors.RESET} {dest_path}")
 
 
 async def generate_images(host: str, port: int, seo_path: str, out_dir: str, overwrite: bool):
@@ -89,24 +89,24 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
     base_url = f"http://{host}:{port}"
     # Collect routes: keys in seo that start with '/'
     routes = [k for k in seo.keys() if k.startswith('/')]
-
+    
+    # Start Playwright early and test server connectivity before prompting
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(viewport={'width': 1200, 'height': 630})
         page = await context.new_page()
-        
-        # Test server connectivity before processing routes
+        # Test server connectivity before processing routes or prompting
         try:
-            print(f"{Colors.BLUE}🔍 Testing connection to {base_url}...{Colors.RESET}")
+            print(f"{Colors.BLUE}[TEST] Testing connection to {base_url}...{Colors.RESET}")
             response = await page.goto(base_url, wait_until='networkidle', timeout=5000)
             if response is None or response.status >= 500:
-                print(f"\n{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} Server at {base_url} returned status {response.status if response else 'None'}")
+                print(f"\n{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} Server at {base_url} returned status {response.status if response else 'None'}")
                 print(f"{Colors.YELLOW}Please ensure the dev server is running with: {Colors.CYAN}pnpm dev{Colors.RESET}")
                 await browser.close()
                 sys.exit(1)
-            print(f"{Colors.GREEN}✓ Server is running at {base_url}{Colors.RESET}\n")
+            print(f"{Colors.GREEN}[OK] Server is running at {base_url}{Colors.RESET}\n")
         except Exception as e:
-            print(f"\n{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} Cannot connect to server at {base_url}")
+            print(f"\n{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} Cannot connect to server at {base_url}")
             print(f"{Colors.RED}Error: {e}{Colors.RESET}")
             print(f"\n{Colors.YELLOW}Please ensure the dev server is running in another terminal:{Colors.RESET}")
             print(f"  {Colors.BRIGHT}1.{Colors.RESET} Run: {Colors.CYAN}pnpm dev{Colors.RESET}")
@@ -115,6 +115,48 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             await browser.close()
             sys.exit(1)
 
+        # Check if any existing images will be encountered
+        if not overwrite:
+            existing_count = 0
+            for route in routes:
+                if route == '':
+                    continue
+                config = seo.get(route, {})
+                og_image = config.get('ogImage')
+                if not og_image:
+                    continue
+                if og_image.startswith('/'):
+                    dest_rel = og_image[1:]
+                else:
+                    dest_rel = og_image
+                dest_path = Path(out_dir) / dest_rel
+                # Only count existing files that are OG images (prefixed with 'og-')
+                if dest_path.exists() and dest_path.name.lower().startswith('og-'):
+                    existing_count += 1
+            
+            if existing_count > 0:
+                # Prompt with 5-second timeout that defaults to 'Y' (skip overwriting)
+                print(f"{Colors.YELLOW}[?] Found {existing_count} existing OG image(s). Skip overwriting them? (Y/n):{Colors.RESET} ", end='', flush=True)
+                
+                try:
+                    # Windows-compatible timeout using asyncio
+                    response = await asyncio.wait_for(
+                        asyncio.get_event_loop().run_in_executor(None, lambda: input().strip().lower()),
+                        timeout=5.0
+                    )
+                except asyncio.TimeoutError:
+                    response = 'y'
+                    print(f"\n{Colors.CYAN}[INFO] No response after 5 seconds, defaulting to skip overwriting{Colors.RESET}")
+                
+                # Default: skip existing images (do not overwrite) unless user answers 'n' or 'no'
+                if response == 'n' or response == 'no':
+                    overwrite = True
+                    print(f"{Colors.CYAN}[INFO] Will overwrite existing images{Colors.RESET}")
+                else:
+                    print(f"{Colors.CYAN}[INFO] Will skip overwriting existing images{Colors.RESET}")
+
+        
+
         for route in routes:
             # Skip only if route is '/'
             if route == '':
@@ -122,7 +164,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             config = seo.get(route, {})
             og_image = config.get('ogImage')
             if not og_image:
-                print(f"{Colors.YELLOW}⏭️  Skipping {route}: no ogImage configured{Colors.RESET}")
+                print(f"{Colors.YELLOW}[SKIP] Skipping {route}: no ogImage configured{Colors.RESET}")
                 continue
 
             # Determine local filepath for OG image
@@ -133,6 +175,11 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                 dest_rel = og_image
 
             dest_path = Path(out_dir) / dest_rel
+            # Only target files prefixed with 'og-'. Skip other image types (e.g., article hero images).
+            fname = dest_path.name
+            if not fname.lower().startswith('og-'):
+                print(f"{Colors.YELLOW}[SKIP] Skipping {route}: ogImage '{og_image}' is not prefixed with 'og-' (not an OG image){Colors.RESET}")
+                continue
             if dest_path.exists() and not overwrite:
                 # print(f"OG image already exists for {route}, skipping: {dest_path}")
                 continue
@@ -144,7 +191,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             try:
                 await capture_page_to_webp(page, url, dest_path)
             except Exception as e:
-                print(f"{Colors.RED}❌ Error capturing {url}: {e}{Colors.RESET}")
+                print(f"{Colors.RED}[ERR] Error capturing {url}: {e}{Colors.RESET}")
 
         await browser.close()
 
@@ -203,16 +250,16 @@ def cleanup_orphaned_images(out_dir: str, referenced: set, dry_run: bool = True)
         else:
             try:
                 p.unlink()
-                print(f"{Colors.GREEN}🗑️  Deleted:{Colors.RESET} {p}")
+                print(f"{Colors.GREEN}[DEL] Deleted:{Colors.RESET} {p}")
             except Exception as e:
-                print(f"{Colors.RED}❌ Failed to delete {p}: {e}{Colors.RESET}")
+                print(f"{Colors.RED}[ERR] Failed to delete {p}: {e}{Colors.RESET}")
 
 
 def main():
     args = parse_args()
     seo_path = args.seo
     if not os.path.exists(seo_path):
-        print(f"{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} seo.json not found at {Colors.YELLOW}{seo_path}{Colors.RESET}")
+        print(f"{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} seo.json not found at {Colors.YELLOW}{seo_path}{Colors.RESET}")
         sys.exit(1)
 
     # Ensure Playwright is installed and browsers are set up

@@ -1,13 +1,13 @@
 {
     "files.exclude": {
-        "vite.config.ts": true,
+        "vite.config.ts": false,
         "eslint.config.mjs": true,
         "node_modules": true,
-        ".gitignore": true,
+        ".gitignore": false,
         ".wrangler": true,
         "pnpm-lock.yaml": true,
         "pnpm-workspace.yaml": true,
-        "tsconfig.app.json": true,
+        "tsconfig.app.json": false,
         "tsconfig.json": true,
         "tsconfig.node.json": true,
         "knip.json": true,

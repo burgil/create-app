@@ -29,6 +29,8 @@ npx github:burgil/create-app my-project-name
 - [Customization](./template/docs/customization.md)
 - [Deployment](./template/docs/deployment.md)
 - [Performance](./template/docs/performance.md)
+- [Optimization Guide](./template/docs/optimize.md)
+- [React Suspense Guide](./template/docs/suspense-guide.md)
 - [React Scan Settings](./template/docs/react-scan-settings.md)
 - [SEO Guide](./template/docs/seo-guide.md)
 
@@ -110,9 +112,12 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 - ✅ **Canonical URLs** to prevent duplicate content
 
 ### Performance by Default
-- ⚡ **Code splitting** - Only load what you need
-- ⚡ **Lazy loading** - Routes load on-demand
-- ⚡ **Asset optimization** - Images and fonts optimized
+- ⚡ **Critical CSS inlining** - 40-50 KB inlined via Beasties (99%+ external CSS reduction)
+- ⚡ **Terser minification** - 3-pass compression with aggressive mangling
+- ⚡ **Code splitting** - Vendor chunks for React, Framer Motion, and icons
+- ⚡ **Lazy loading** - Routes and components load on-demand
+- ⚡ **Dual compression** - gzip + brotli for all assets
+- ⚡ **Font optimization** - Zero CLS with font-display: optional
 - ⚡ **CDN-ready** - Serve from edge locations worldwide
 
 ## 📚 Documentation
@@ -122,6 +127,8 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 - **[SEO Best Practices](template/docs/seo-guide.md)** - Maximize your search rankings
 - **[Deployment Guide](template/docs/deployment.md)** - Ship to production in minutes
 - **[Performance Optimization](template/docs/performance.md)** - Make it even faster
+- **[Optimization Guide](template/docs/optimize.md)** - Advanced performance optimizations (99+ mobile / 100 desktop)
+- **[React Suspense Guide](template/docs/suspense-guide.md)** - Lazy-loading patterns and best practices
 - **[Customization Guide](template/docs/customization.md)** - Make it yours
 
 ## 🎨 Example Pages Included
@@ -147,9 +154,11 @@ No serverless functions, no Node.js runtime, no hidden costs.
 ## 📊 Real-World Results
 
 ```
-Lighthouse Score: 💯 100/100
+Mobile PageSpeed: 99/100
+Desktop PageSpeed: 100/100
 First Contentful Paint: <0.5s
-Time to Interactive: <1.2s
+Largest Contentful Paint: <2.5s
+Cumulative Layout Shift: 0
 SEO Score: 💯 100/100
 ```
 

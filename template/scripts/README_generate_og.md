@@ -14,12 +14,12 @@ playwright install
 Usage
 
 ```bash
-python scripts/generate_og_screenshots.py --host localhost --port 5173 --seo seo.json --out public
+python scripts/generate_og_screenshots.py --host localhost --port 4173 --seo seo.json --out public
 ```
 
 Options
 - `--host`: Hostname (default: localhost)
-- `--port`: Port that dev server is running (default: 5173)
+- `--port`: Port that dev server is running (default: 4173)
 - `--seo`: Path to `seo.json` (default: seo.json)
 - `--out`: Output directory (default: public)
 - `--overwrite`: Overwrite existing OG files (default: skip existing)

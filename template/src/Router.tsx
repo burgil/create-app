@@ -5,6 +5,7 @@ import Layout from './Layout'
 
 const Home = lazy(() => import('./pages/home'))
 const About = lazy(() => import('./pages/about'))
+const SuspenseExample = lazy(() => import('./components/SuspenseExample'))
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
+            <Route path="suspense-example" element={<SuspenseExample />} />
             <Route
               path='*'
               element={
