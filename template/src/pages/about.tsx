@@ -1,5 +1,3 @@
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import PageHeader from '@/components/PageHeader';
 import { motion } from 'framer-motion';
 import { Code, Zap, Package } from 'lucide-react';
@@ -13,7 +11,6 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-[#020204] font-sans text-white">
-      <Navbar />
       <PageHeader title="About This Template" description="A clean Vite + React starter template used by the create-app CLI to scaffold new projects." />
 
       <section className="py-16 container mx-auto px-6">
@@ -39,8 +36,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }
