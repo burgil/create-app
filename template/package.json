@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm lint && pnpm core:build && pnpm og-screenshots",
-    "core:build": "cross-env NODE_ENV=production vite build && pnpm prerender",
+    "core:build": "cross-env NODE_ENV=production vite build && pnpm prerender && pnpm compress",
     "preview": "vite preview",
     "test": "pnpm lint && pnpm core:build && vite preview",
-    "upload": "pnpm build && npx wrangler pages deploy ./dist",
+    "upload": "pnpm build && npx wrangler pages deploy ./dist --project-name=qustreamdev",
     "lint": "eslint . && tsc -b && knip --production --dependencies --files",
     "prerender": "tsx --tsconfig tsconfig.app.json scripts/prerender.ts",
+    "compress": "tsx --tsconfig tsconfig.app.json scripts/compress.ts",
     "og-screenshots": "python scripts/generate_og_screenshots.py --port 4173 --seo seo.json --cleanup",
     "analyze": "cross-env ANALYZE=true pnpm core:build"
   },

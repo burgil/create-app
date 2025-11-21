@@ -91,11 +91,13 @@ export default defineConfig(() => {
         ...PROJECT_CONFIG.beastiesConfig,
       },
     }),
-    viteCompression({
+    // Enable compression only when explicitly requested via env var.
+    // This prevents compressed assets from being generated before prerendering runs.
+    process.env.VITE_BUILD_COMPRESSION === 'true' && viteCompression({
       algorithm: 'gzip',
       deleteOriginFile: false,
     }),
-    viteCompression({
+    process.env.VITE_BUILD_COMPRESSION === 'true' && viteCompression({
       algorithm: 'brotliCompress',
       ext: '.br',
       deleteOriginFile: false,
