@@ -31,6 +31,17 @@ from typing import Dict, Any
 from PIL import Image
 from playwright.async_api import async_playwright
 
+# ANSI color codes
+class Colors:
+    RESET = '\033[0m'
+    BRIGHT = '\033[1m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    CYAN = '\033[96m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate OG screenshots from routes in seo.json')
@@ -57,11 +68,11 @@ def ensure_dir_for_file(filepath: Path):
 
 
 async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 630)):
-    print(f"Navigating to {url}")
+    print(f"{Colors.CYAN}🔄 Navigating to{Colors.RESET} {url}")
     await page.set_viewport_size({'width': viewport[0], 'height': viewport[1]})
     response = await page.goto(url, wait_until='networkidle', timeout=30000)
     if response is None or not (200 <= response.status < 400):
-        print(f"Warning: Received status {response.status if response else 'None'} for {url}")
+        print(f"{Colors.YELLOW}⚠️  Warning: Received status {response.status if response else 'None'} for {url}{Colors.RESET}")
     # Wait a bit for dynamic content and animations to settle
     await asyncio.sleep(1.2)
     tmp_png = dest_path.with_suffix('.png')
@@ -70,7 +81,7 @@ async def capture_page_to_webp(page, url: str, dest_path: Path, viewport=(1200, 
     img = Image.open(tmp_png)
     img.save(dest_path, 'WEBP', quality=90, method=6)
     tmp_png.unlink()
-    print(f"Saved OG image to {dest_path}")
+    print(f"{Colors.GREEN}✅ Saved OG image to{Colors.RESET} {dest_path}")
 
 
 async def generate_images(host: str, port: int, seo_path: str, out_dir: str, overwrite: bool):
@@ -83,6 +94,26 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(viewport={'width': 1200, 'height': 630})
         page = await context.new_page()
+        
+        # Test server connectivity before processing routes
+        try:
+            print(f"{Colors.BLUE}🔍 Testing connection to {base_url}...{Colors.RESET}")
+            response = await page.goto(base_url, wait_until='networkidle', timeout=5000)
+            if response is None or response.status >= 500:
+                print(f"\n{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} Server at {base_url} returned status {response.status if response else 'None'}")
+                print(f"{Colors.YELLOW}Please ensure the dev server is running with: {Colors.CYAN}pnpm dev{Colors.RESET}")
+                await browser.close()
+                sys.exit(1)
+            print(f"{Colors.GREEN}✓ Server is running at {base_url}{Colors.RESET}\n")
+        except Exception as e:
+            print(f"\n{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} Cannot connect to server at {base_url}")
+            print(f"{Colors.RED}Error: {e}{Colors.RESET}")
+            print(f"\n{Colors.YELLOW}Please ensure the dev server is running in another terminal:{Colors.RESET}")
+            print(f"  {Colors.BRIGHT}1.{Colors.RESET} Run: {Colors.CYAN}pnpm dev{Colors.RESET}")
+            print(f"  {Colors.BRIGHT}2.{Colors.RESET} Wait for server to start on port {Colors.MAGENTA}{port}{Colors.RESET}")
+            print(f"  {Colors.BRIGHT}3.{Colors.RESET} Run this script again\n")
+            await browser.close()
+            sys.exit(1)
 
         for route in routes:
             # Skip only if route is '/'
@@ -91,7 +122,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             config = seo.get(route, {})
             og_image = config.get('ogImage')
             if not og_image:
-                print(f"Skipping {route}: no ogImage configured")
+                print(f"{Colors.YELLOW}⏭️  Skipping {route}: no ogImage configured{Colors.RESET}")
                 continue
 
             # Determine local filepath for OG image
@@ -113,7 +144,7 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             try:
                 await capture_page_to_webp(page, url, dest_path)
             except Exception as e:
-                print(f"Error capturing {url}: {e}")
+                print(f"{Colors.RED}❌ Error capturing {url}: {e}{Colors.RESET}")
 
         await browser.close()
 
@@ -168,20 +199,20 @@ def cleanup_orphaned_images(out_dir: str, referenced: set, dry_run: bool = True)
     # Delete or show them
     for p in to_delete:
         if dry_run:
-            print(f"[DRYRUN] Would delete: {p}")
+            print(f"{Colors.YELLOW}[DRYRUN]{Colors.RESET} Would delete: {p}")
         else:
             try:
                 p.unlink()
-                print(f"Deleted: {p}")
+                print(f"{Colors.GREEN}🗑️  Deleted:{Colors.RESET} {p}")
             except Exception as e:
-                print(f"Failed to delete {p}: {e}")
+                print(f"{Colors.RED}❌ Failed to delete {p}: {e}{Colors.RESET}")
 
 
 def main():
     args = parse_args()
     seo_path = args.seo
     if not os.path.exists(seo_path):
-        print(f"seo.json not found at {seo_path}")
+        print(f"{Colors.RED}{Colors.BRIGHT}❌ ERROR:{Colors.RESET} seo.json not found at {Colors.YELLOW}{seo_path}{Colors.RESET}")
         sys.exit(1)
 
     # Ensure Playwright is installed and browsers are set up
