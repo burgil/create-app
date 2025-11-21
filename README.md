@@ -86,11 +86,21 @@ npx github:burgil/create-app my-epic-app
 cd my-epic-app
 pnpm install
 
+# Optional: Install Python requirements for OG screenshot generation
+pip install -r scripts/requirements.txt
+playwright install
+
 # Start dev server (instant HMR)
 pnpm dev
 
 # Build for production (includes SSG)
 pnpm build
+
+# Approve builds (local build + generate assets)
+# This runs the production build and generates OG screenshots
+# Use `pnpm build && pnpm og-screenshots` if you want to follow the full workflow in CI or locally
+# (optional: requires Python, Playwright, and a running preview server for OG generation)
+# pnpm build && pnpm og-screenshots
 
 # Preview production build
 pnpm preview

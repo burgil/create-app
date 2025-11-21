@@ -101,15 +101,15 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
             response = await page.goto(base_url, wait_until='networkidle', timeout=5000)
             if response is None or response.status >= 500:
                 print(f"\n{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} Server at {base_url} returned status {response.status if response else 'None'}")
-                print(f"{Colors.YELLOW}Please ensure the dev server is running with: {Colors.CYAN}pnpm dev{Colors.RESET}")
+                print(f"{Colors.YELLOW}Please ensure the preview server is running with: {Colors.CYAN}pnpm preview{Colors.RESET}")
                 await browser.close()
                 sys.exit(1)
             print(f"{Colors.GREEN}[OK] Server is running at {base_url}{Colors.RESET}\n")
         except Exception as e:
             print(f"\n{Colors.RED}{Colors.BRIGHT}[ERR] ERROR:{Colors.RESET} Cannot connect to server at {base_url}")
             print(f"{Colors.RED}Error: {e}{Colors.RESET}")
-            print(f"\n{Colors.YELLOW}Please ensure the dev server is running in another terminal:{Colors.RESET}")
-            print(f"  {Colors.BRIGHT}1.{Colors.RESET} Run: {Colors.CYAN}pnpm dev{Colors.RESET}")
+            print(f"\n{Colors.YELLOW}Please ensure the preview server is running in another terminal:{Colors.RESET}")
+            print(f"  {Colors.BRIGHT}1.{Colors.RESET} Run: {Colors.CYAN}pnpm preview{Colors.RESET}")
             print(f"  {Colors.BRIGHT}2.{Colors.RESET} Wait for server to start on port {Colors.MAGENTA}{port}{Colors.RESET}")
             print(f"  {Colors.BRIGHT}3.{Colors.RESET} Run this script again\n")
             await browser.close()

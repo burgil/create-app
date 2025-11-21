@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router';
-import { type FC, Suspense, lazy } from 'react';
+import { Outlet, useLocation } from 'react-router';
+import { type FC, Suspense, lazy, useEffect } from 'react';
 import SEOTitle from './components/SEOTitle';
 import LoadingScreen from './components/LoadingScreen';
 const Navbar = lazy(() => import('@/components/Navbar'));
@@ -8,6 +8,13 @@ import Footer from './components/Footer';
 const Layout: FC = () => {
   // Check if we're in SSR mode (global flag set by prerenderer)
   const isSSR = typeof window !== 'undefined' && (window as unknown as { __SSR__?: boolean }).__SSR__;
+
+  const location = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname]);
 
   const content = (
     <>
