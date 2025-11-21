@@ -9,7 +9,7 @@
     "core:build": "cross-env NODE_ENV=production vite build && pnpm prerender",
     "preview": "vite preview",
     "test": "pnpm lint && pnpm core:build && vite preview",
-    "upload": "pnpm build && npx wrangler pages deploy ./dist --project-name=qustreamdev",
+    "upload": "pnpm build && npx wrangler pages deploy ./dist",
     "lint": "eslint . && tsc -b && knip --production --dependencies --files",
     "prerender": "tsx --tsconfig tsconfig.app.json scripts/prerender.ts",
     "og-screenshots": "python scripts/generate_og_screenshots.py --port 4173 --seo seo.json --cleanup",

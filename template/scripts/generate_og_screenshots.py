@@ -25,6 +25,7 @@ import json
 import os
 import sys
 import asyncio
+import time
 from pathlib import Path
 from typing import Dict, Any
 
@@ -135,20 +136,68 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                     existing_count += 1
             
             if existing_count > 0:
-                # Prompt with 5-second timeout that defaults to 'Y' (skip overwriting)
-                print(f"{Colors.YELLOW}[?] Found {existing_count} existing OG image(s). Skip overwriting them? (Y/n):{Colors.RESET} ", end='', flush=True)
-                
-                try:
-                    # Windows-compatible timeout using asyncio
-                    response = await asyncio.wait_for(
-                        asyncio.get_event_loop().run_in_executor(None, lambda: input().strip().lower()),
-                        timeout=5.0
-                    )
-                except asyncio.TimeoutError:
-                    response = 'y'
-                    print(f"\n{Colors.CYAN}[INFO] No response after 5 seconds, defaulting to skip overwriting{Colors.RESET}")
-                
-                # Default: skip existing images (do not overwrite) unless user answers 'n' or 'no'
+                # Prompt with a 5-second timeout that defaults to 'Y' (skip overwriting).
+                prompt_text = f"{Colors.YELLOW}[?] Found {existing_count} existing OG image(s). Skip overwriting them? (Y/n):{Colors.RESET} "
+                print(prompt_text, end='', flush=True)
+
+                def timed_prompt(prompt: str, timeout: float = 5.0, default: str = 'y') -> str:
+                    # Windows: use msvcrt to read characters without requiring Enter
+                    if os.name == 'nt':
+                        try:
+                            import msvcrt
+                        except Exception:
+                            # Fallback to input() if msvcrt isn't available
+                            try:
+                                return input().strip().lower()
+                            except Exception:
+                                return default
+                        buf = []
+                        start = time.time()
+                        while True:
+                            if msvcrt.kbhit():
+                                ch = msvcrt.getwche()
+                                if ch in ('\r', '\n'):
+                                    print()
+                                    return ''.join(buf).strip().lower()
+                                elif ch == '\x08':  # backspace
+                                    if buf:
+                                        buf.pop()
+                                        # Erase character visually
+                                        print('\b \b', end='', flush=True)
+                                else:
+                                    buf.append(ch)
+                                    # Accept single 'y' or 'n' keypress without Enter
+                                    if ch.lower() in ('y', 'n') and len(buf) == 1:
+                                        print()
+                                        return ch.lower()
+                            if time.time() - start >= timeout:
+                                print()
+                                print(f"{Colors.CYAN}[INFO] No response after {int(timeout)} seconds, defaulting to skip overwriting{Colors.RESET}")
+                                return default
+                            time.sleep(0.05)
+                    else:
+                        # POSIX: select on stdin; user still must press Enter but we avoid a stuck thread
+                        try:
+                            import select, sys
+                            rlist, _, _ = select.select([sys.stdin], [], [], timeout)
+                            if rlist:
+                                line = sys.stdin.readline().strip().lower()
+                                return line
+                            else:
+                                print()
+                                print(f"{Colors.CYAN}[INFO] No response after {int(timeout)} seconds, defaulting to skip overwriting{Colors.RESET}")
+                                return default
+                        except Exception:
+                            # Fallback
+                            try:
+                                return input().strip().lower()
+                            except Exception:
+                                return default
+
+                # Run the prompt in an executor so we don't block the event loop
+                response = await asyncio.get_event_loop().run_in_executor(None, timed_prompt, prompt_text, 5.0, 'y')
+
+                # Default: skip existing images unless user answers 'n' or 'no'
                 if response == 'n' or response == 'no':
                     overwrite = True
                     print(f"{Colors.CYAN}[INFO] Will overwrite existing images{Colors.RESET}")
