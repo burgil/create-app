@@ -1,6 +1,6 @@
 {
   "name": "create-app",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "author": "Burgil",
   "license": "MIT",
@@ -17,6 +17,11 @@
   },
   "keywords": [
     "create-app",
+    "react",
+    "super epic",
+    "ssr",
+    "ssg",
+    "seo",
     "generator",
     "scaffold"
   ],
