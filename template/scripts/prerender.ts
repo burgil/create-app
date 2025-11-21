@@ -158,19 +158,19 @@ function generateSchemaMarkup(routePath: string): string {
         });
     }
 
-    // Software Application Schema (optional)
+    // Software Application Schema
     if (seo.schema?.softwareApplication) {
         schemas.push({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": globalConfig.organization.name,
-            "applicationCategory": "WebApplication",
+            "name": globalConfig.software.name,
+            "applicationCategory": globalConfig.software.category,
             "offers": {
                 "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
+                "price": globalConfig.software.price.toString(),
+                "priceCurrency": globalConfig.software.priceCurrency
             },
-            "operatingSystem": "Web",
+            "operatingSystem": globalConfig.software.operatingSystem,
             "description": seo.description
         });
     }

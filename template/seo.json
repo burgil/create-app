@@ -17,6 +17,13 @@
       "name": "Create App Template",
       "description": "A minimal Vite + React starter template for quick bootstrapping.",
       "url": "https://example.com"
+    },
+    "software": {
+      "name": "Create App Template",
+      "price": 0,
+      "category": "WebApplication",
+      "operatingSystem": "Web, iOS, Android",
+      "priceCurrency": "USD"
     }
   },
   "/": {
