@@ -1,6 +1,6 @@
 {
   "name": "create-app",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "type": "module",
   "author": "Burgil",
   "license": "MIT",
@@ -13,8 +13,8 @@
     "template"
   ],
   "scripts": {
-    "test-cli": "node bin/index.js test-app --force",
-    "release:bump": "node ./bin/bump-release.js"
+    "test": "node bin/index.js test-app --force",
+    "bump": "node ./bin/bump-release.js"
   },
   "keywords": [
     "create-app",
