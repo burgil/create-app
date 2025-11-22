@@ -102,7 +102,7 @@ python scripts/generate_og_screenshots.py --host 127.0.0.1 --port $PORT --seo se
 
 ## See Also
 
-- `scripts/generate_og_screenshots.py` — the implementation (scripts/README_generate_og.md has more detailed examples).
+- `scripts/generate_og_screenshots.py` - the implementation (scripts/README_generate_og.md has more detailed examples).
 
 ***
 

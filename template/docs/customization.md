@@ -701,9 +701,9 @@ export const client = createClient({
 
 ## Next Steps
 
-- **[Architecture Guide](architecture.md)** — Understand the system
-- **[SEO Guide](seo-guide.md)** — Optimize for search
-- **[Performance Guide](performance.md)** — Make it faster
+- **[Architecture Guide](architecture.md)** - Understand the system
+- **[SEO Guide](seo-guide.md)** - Optimize for search
+- **[Performance Guide](performance.md)** - Make it faster
 
 ---
 

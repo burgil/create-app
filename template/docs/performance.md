@@ -624,9 +624,9 @@ Every external script slows your site:
 
 ## Next Steps
 
-- **[SEO Guide](seo-guide.md)** — Optimize for search
-- **[Deployment Guide](deployment.md)** — Launch your site
-- **[Architecture Guide](architecture.md)** — Understand the system
+- **[SEO Guide](seo-guide.md)** - Optimize for search
+- **[Deployment Guide](deployment.md)** - Launch your site
+- **[Architecture Guide](architecture.md)** - Understand the system
 
 ---
 

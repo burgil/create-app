@@ -1,5 +1,6 @@
 import { createElement } from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToPipeableStream } from 'react-dom/server';
+import { PassThrough } from 'stream';
 import { MemoryRouter } from 'react-router';
 import fs from 'fs';
 import path from 'path';
@@ -96,7 +97,7 @@ function generateMetaTags(routePath: string): string {
         }
     })();
 
-    const imageAlt = seo.ogImageAlt || `${seo.title} — ${globalConfig.siteName}`;
+    const imageAlt = seo.ogImageAlt || `${seo.title} - ${globalConfig.siteName}`;
 
     const tags = `
     <title>${seo.title}</title>
@@ -366,13 +367,58 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
             throw new Error(`No default export found in ${route.componentPath}`);
         }
 
-        const appHtml = renderToString(
-            createElement(
-                MemoryRouter,
-                { initialEntries: [route.path] },
-                createElement(Component)
-            )
+        const element = createElement(
+            MemoryRouter,
+            { initialEntries: [route.path] },
+            createElement(Component)
         );
+
+        const appHtml = await new Promise<string>((resolve, reject) => {
+            let didError = false;
+
+            const pipeable = renderToPipeableStream(element, {
+                onShellReady() {
+                    // We wait for onAllReady so Suspense boundaries are resolved
+                },
+                onAllReady() {
+                    console.log(`${colors.green}🔀 Suspense ready for ${route.path}${colors.reset}`);
+                    const body = new PassThrough();
+                    pipeable.pipe(body);
+
+                    const chunks: Buffer[] = [];
+                    body.on('data', (chunk: Buffer) => chunks.push(Buffer.from(chunk)));
+                    body.on('end', () => { clearTimer(); resolve(Buffer.concat(chunks).toString('utf8')); });
+                    body.on('error', (err: Error) => { clearTimer(); reject(err); });
+                },
+                onError(err) {
+                    didError = true;
+                    // Non-fatal; log and keep rendering
+                    console.error(`${colors.red}⚠️ React render error:${colors.reset}`, err);
+                },
+                onShellError(err) {
+                    didError = true;
+                    clearTimer();
+                    reject(err);
+                }
+            });
+
+            // Safety timeout: abort rendering if it takes too long
+            const timeout = setTimeout(() => {
+                if (!didError) {
+                    try {
+                        pipeable.abort();
+                    } catch (err) {
+                        console.warn(`${colors.yellow}⚠️ Failed to abort SSR render:${colors.reset}`, err);
+                    }
+                    reject(new Error('SSR render timed out'));
+                }
+            }, 30_000);
+            // Clear timeout on resolve/reject
+            const clearTimer = () => clearTimeout(timeout);
+
+            // Attach temporary handlers to ensure the timeout is cleared
+            // (The Promise resolves/rejects in onAllReady/onShellError, above.)
+        });
 
         let html = templateHTML;
 
@@ -386,10 +432,13 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
             html = html.replace('</head>', `${schemaMarkup}\n    </head>`);
         }
 
+        // Sanitize rendered content: remove any <script> and <style> tags
+        const sanitizedAppHtml = appHtml.replace(/<(?:script|style)[^>]*>[\s\S]*?<\/(?:script|style)>/gi, '');
+
         // Inject rendered content
         html = html.replace(
             '<div id="root"></div>',
-            `<div id="root">${appHtml}</div>`
+            `<div id="root">${sanitizedAppHtml}</div>`
         );
 
         const outputPath = path.resolve(__dirname, '../dist', route.outputPath);

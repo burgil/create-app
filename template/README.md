@@ -36,6 +36,8 @@ Most React apps fail at SEO because they're client-side rendered. Traditional SS
 - **Framer Motion** - Smooth animations that feel native
 - **Lucide Icons + React Icons** - Beautiful icon libraries
 - **Pre-rendering** - Automatic SSG for perfect SEO
+	- **Pre-rendering** - Automatic SSG for perfect SEO
+	- Suspense handling: The prerenderer handles Suspense during SSR automatically, so you can use `<Suspense>` and `React.lazy()` normally without `isSSR` checks.
 - **OG Image Generation** - Auto-generate Open Graph images
 - **Schema.org** - Rich snippets for better search results
 

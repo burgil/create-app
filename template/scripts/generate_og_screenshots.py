@@ -26,11 +26,15 @@ import os
 import sys
 import asyncio
 import time
+import threading
 from pathlib import Path
 from typing import Dict, Any
 
 from PIL import Image
 from playwright.async_api import async_playwright
+
+# Shared event used to signal prompt threads to exit early on cancel
+prompt_cancel_event = threading.Event()
 
 # ANSI color codes
 class Colors:
@@ -141,6 +145,9 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                 print(prompt_text, end='', flush=True)
 
                 def timed_prompt(prompt: str, timeout: float = 10.0, default: str = 'y') -> str:
+                    # Check if cancel event was set before starting
+                    if prompt_cancel_event.is_set():
+                        raise KeyboardInterrupt
                     # Windows: use msvcrt to read characters without requiring Enter
                     if os.name == 'nt':
                         try:
@@ -149,13 +156,21 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                             # Fallback to input() if msvcrt isn't available
                             try:
                                 return input().strip().lower()
+                            except KeyboardInterrupt:
+                                # Propagate so the prompt handling can cancel the whole script
+                                raise
                             except Exception:
                                 return default
                         buf = []
                         start = time.time()
                         while True:
+                            if prompt_cancel_event.is_set():
+                                raise KeyboardInterrupt
                             if msvcrt.kbhit():
                                 ch = msvcrt.getwche()
+                                # Ctrl+C via msvcrt may appear as ASCII ETX '\x03'
+                                if ch == '\x03':
+                                    raise KeyboardInterrupt
                                 if ch in ('\r', '\n'):
                                     print()
                                     return ''.join(buf).strip().lower()
@@ -172,6 +187,8 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                                         return ch.lower()
                             if time.time() - start >= timeout:
                                 print()
+                                if prompt_cancel_event.is_set():
+                                    raise KeyboardInterrupt
                                 print(f"{Colors.CYAN}[INFO] No response after {int(timeout)} seconds, defaulting to skip overwriting{Colors.RESET}")
                                 return default
                             time.sleep(0.1)
@@ -185,17 +202,39 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                                 return line
                             else:
                                 print()
+                                if prompt_cancel_event.is_set():
+                                    raise KeyboardInterrupt
                                 print(f"{Colors.CYAN}[INFO] No response after {int(timeout)} seconds, defaulting to skip overwriting{Colors.RESET}")
                                 return default
                         except Exception:
                             # Fallback
                             try:
                                 return input().strip().lower()
+                            except KeyboardInterrupt:
+                                # Propagate to caller so we can cancel the whole run
+                                raise
                             except Exception:
                                 return default
 
                 # Run the prompt in an executor so we don't block the event loop
-                response = await asyncio.get_event_loop().run_in_executor(None, timed_prompt, prompt_text, 10.0, 'y')
+                try:
+                    response = await asyncio.get_event_loop().run_in_executor(None, timed_prompt, prompt_text, 10.0, 'y')
+                except asyncio.CancelledError:
+                    prompt_cancel_event.set()
+                    print(f"\n{Colors.CYAN}[INFO] Prompt cancelled by user (Ctrl+C). Exiting...{Colors.RESET}")
+                    try:
+                        await browser.close()
+                    except Exception:
+                        pass
+                    sys.exit(1)
+                except KeyboardInterrupt:
+                    prompt_cancel_event.set()
+                    print(f"\n{Colors.CYAN}[INFO] Operation cancelled by user (Ctrl+C). Exiting...{Colors.RESET}")
+                    try:
+                        await browser.close()
+                    except Exception:
+                        pass
+                    sys.exit(1)
 
                 # Default: skip existing images unless user answers 'n' or 'no'
                 if response == 'n' or response == 'no':
@@ -241,6 +280,22 @@ async def generate_images(host: str, port: int, seo_path: str, out_dir: str, ove
                 # Wait longer for the homepage, which often contains animated hero content
                 homepage_wait = 3.0 if route in ('/', '') else 1.2
                 await capture_page_to_webp(page, url, dest_path, wait_time=homepage_wait)
+            except asyncio.CancelledError:
+                prompt_cancel_event.set()
+                print(f"\n{Colors.CYAN}[INFO] Capture cancelled by user (Ctrl+C). Exiting...{Colors.RESET}")
+                try:
+                    await browser.close()
+                except Exception:
+                    pass
+                sys.exit(1)
+            except KeyboardInterrupt:
+                prompt_cancel_event.set()
+                print(f"\n{Colors.CYAN}[INFO] Operation cancelled by user (Ctrl+C). Exiting...{Colors.RESET}")
+                try:
+                    await browser.close()
+                except Exception:
+                    pass
+                sys.exit(1)
             except Exception as e:
                 print(f"{Colors.RED}[ERR] Error capturing {url}: {e}{Colors.RESET}")
 
@@ -317,7 +372,16 @@ def main():
     # This script assumes `playwright install` has been run.
 
     # Run generation and optional cleanup
-    asyncio.run(generate_images(args.host, args.port, seo_path, args.out, args.overwrite))
+    try:
+        asyncio.run(generate_images(args.host, args.port, seo_path, args.out, args.overwrite))
+    except KeyboardInterrupt:
+        prompt_cancel_event.set()
+        print(f"\n{Colors.CYAN}[INFO] Operation cancelled by user (Ctrl+C). Exiting...{Colors.RESET}")
+        sys.exit(1)
+    except asyncio.CancelledError:
+        prompt_cancel_event.set()
+        print(f"\n{Colors.CYAN}[INFO] Operation cancelled. Exiting...{Colors.RESET}")
+        sys.exit(1)
     if args.cleanup:
         seo = read_seo(seo_path)
         referenced = get_referenced_images_from_seo(seo)

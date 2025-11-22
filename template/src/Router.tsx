@@ -5,7 +5,7 @@ import Layout from './Layout'
 
 const Home = lazy(() => import('./pages/home'))
 const About = lazy(() => import('./pages/about'))
-const SuspenseExample = lazy(() => import('./components/SuspenseExample'))
+const SuspenseExample = lazy(() => import('./pages/SuspenseExample'))
 
 function Router() {
   return (

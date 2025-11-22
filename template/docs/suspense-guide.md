@@ -81,7 +81,7 @@ function Layout() {
 
 ---
 
-## 🎨 SSR-Safe Suspense (Template Pattern)
+### 🎨 Suspense (Template Pattern)
 
 From `src/Layout.tsx`:
 
@@ -91,9 +91,6 @@ import LoadingScreen from './components/LoadingScreen';
 const Navbar = lazy(() => import('@/components/Navbar'));
 
 const Layout: FC = () => {
-  // Check if we're in SSR mode (global flag set by prerenderer)
-  const isSSR = typeof window !== 'undefined' && (window as unknown as { __SSR__?: boolean }).__SSR__;
-
   const content = (
     <>
       <main data-beasties-container className="min-h-screen">
@@ -105,11 +102,9 @@ const Layout: FC = () => {
     </>
   );
 
-  // Skip Suspense during SSR to avoid renderToString errors
-  if (isSSR) {
-    return content;
-  }
-
+  // Suspense boundaries work both on the server and client; the prerenderer
+  // will handle SSR semantics automatically. Use Suspense normally - no
+  // manual `isSSR` checks are required.
   return (
     <Suspense fallback={<LoadingScreen />}>
       {content}
@@ -119,9 +114,8 @@ const Layout: FC = () => {
 ```
 
 **Why this pattern?**
-- React's `renderToString` doesn't support Suspense boundaries
-- We detect SSR and conditionally skip outer Suspense
-- Inner Suspense boundaries work fine during client hydration
+- Suspense boundaries are handled automatically during SSR by the prerenderer.
+- Inner Suspense boundaries will hydrate correctly on the client.
 
 ---
 
@@ -417,11 +411,11 @@ function App({ isAdmin }: { isAdmin: boolean }) {
 **Key Takeaways:**
 - Use `lazy()` + `<Suspense>` for code splitting
 - Always provide sized fallbacks to prevent layout shift
-- Detect SSR and conditionally skip Suspense boundaries
+- Suspense boundaries are handled automatically during SSR by the prerenderer - you don't need to guard them with `isSSR` checks
 - Lazy-load below-the-fold and heavy components
 - Measure impact with bundle analyzer (`ANALYZE=true pnpm core:build`)
 
-**Template-specific patterns:**
-- See `src/Layout.tsx` for SSR-safe Suspense pattern
+- **Template-specific patterns:**
+- See `src/Layout.tsx` for a Suspense pattern that works in both SSR and client environments (the prerenderer handles SSR semantics)
 - See `vite.config.ts` for manual chunk configuration
 - See `docs/optimize.md` for bundle optimization strategies

@@ -22,7 +22,7 @@ src/
 ├── pages/           # Route pages (home.tsx, about.tsx)
 ├── components/      # Reusable UI components
 ├── Router.tsx       # Route definitions with lazy loading
-├── Layout.tsx       # SSR-safe Suspense wrapper + SEO
+├── Layout.tsx       # Suspense wrapper + SEO (prerenderer handles SSR semantics)
 ├── main.tsx         # App entry point
 └── index.css        # Global styles
 
@@ -220,14 +220,9 @@ const Footer = lazy(() => import('./Footer'));
 </Suspense>
 ```
 
-### Pattern 2: SSR-Safe Suspense (Layout.tsx pattern)
+### Pattern 2: Suspense (Layout.tsx pattern)
 ```tsx
-const isSSR = typeof window !== 'undefined' && (window as any).__SSR__;
-
-if (isSSR) {
-  return content;  // Skip Suspense during SSR
-}
-
+// The prerenderer handles Suspense during SSR; use Suspense normally
 return (
   <Suspense fallback={<LoadingScreen />}>
     {content}
@@ -434,6 +429,17 @@ npm create burgil-app my-project
 
 - ErrorBoundary wraps the entire app for error handling
 - `@` alias resolves to `src/` (configured in `vite.config.ts`)
-- SSR detection flag: `window.__SSR__` (set by prerender script)
+- SSR detection flag: `window.__SSR__` (set by prerender script) - note: you don't need to use this flag to guard Suspense boundaries; the prerenderer handles SSR semantics
 - Beasties runs twice: once during Vite build, once during prerender
 - All optimizations are configurable via `vite.config.ts`
+
+## Avoid cursed strings
+
+```
+’ -> '
+“ -> "
+” -> "
+– -> -
+— -> -
+… -> ...
+```

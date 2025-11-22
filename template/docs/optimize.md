@@ -285,20 +285,9 @@ terserConfig: {
    - Applies Beasties to inline critical CSS
    - Generates `sitemap.xml` and `robots.txt`
 
-### SSR Detection in Components
+### SSR and Suspense (Prerenderer handling)
 
-From `Layout.tsx`:
-
-```tsx
-const isSSR = typeof window !== 'undefined' && (window as unknown as { __SSR__?: boolean }).__SSR__;
-
-// Skip Suspense during SSR to avoid renderToString errors
-if (isSSR) {
-  return content;
-}
-```
-
-**Why?** React's `renderToString` doesn't support Suspense. We detect SSR and conditionally skip Suspense boundaries.
+Suspense boundaries are automatically handled during SSR by the prerenderer. You no longer need to detect SSR inside components or conditionally skip Suspense boundaries - the prerenderer will ensure server rendering and client hydration behave correctly.
 
 ---
 

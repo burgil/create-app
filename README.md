@@ -222,6 +222,17 @@ This template is provided under the MIT License.
 3. **Deploy** to Cloudflare Pages or Vercel (takes 2 minutes)
 4. **Ship** your epic project to the world 🚀
 
+## Avoid cursed strings:
+
+```
+’ -> '
+“ -> "
+” -> "
+– -> -
+— -> -
+… -> ...
+```
+
 ---
 
 **Built with ❤️ for developers who want to ship fast without compromising on quality.**
