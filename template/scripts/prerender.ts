@@ -45,6 +45,10 @@ interface SEOConfig {
     ogType: string;
     ogImage: string;
     twitterCard: string;
+    ogImageAlt?: string;
+    ogImageWidth?: number;
+    ogImageHeight?: number;
+    publishedDate?: string;
     sitemap?: {
         changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
         priority: number;
@@ -56,11 +60,43 @@ interface SEOConfig {
         breadcrumb?: boolean;
         jobPosting?: boolean;
         softwareApplication?: boolean;
+        article?: boolean;
     };
 }
 
 function generateMetaTags(routePath: string): string {
     const seo: SEOConfig = seoConfig[routePath] || seoConfig['/'];
+
+    // Helper: Ensure we have a fallback for twitterCard
+    const twitterCard = seo.twitterCard || globalConfig.twitterCard || 'summary_large_image';
+
+    // Full URLs for images and logo
+    const fullImageUrl = seo.ogImage?.startsWith('http') ? seo.ogImage : `${globalConfig.domain}${seo.ogImage}`;
+    const logoUrl = globalConfig.logo?.startsWith('http') ? globalConfig.logo : `${globalConfig.domain}${globalConfig.logo}`;
+    const twitterHandle = (() => {
+        const twitterUrl = globalConfig.social?.twitter || '';
+        // Example: https://x.com/qu_stream -> qu_stream
+        const parts = twitterUrl.split('/').filter(Boolean);
+        const handle = parts[parts.length - 1] || '';
+        return handle ? (handle.startsWith('@') ? handle : `@${handle}`) : '';
+    })();
+
+    // Determine image MIME type by extension
+    const mimeType = (() => {
+        try {
+            const ext = path.extname((seo.ogImage as string) || '').toLowerCase();
+            if (ext === '.webp') return 'image/webp';
+            if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg';
+            if (ext === '.png') return 'image/png';
+            if (ext === '.tif' || ext === '.tiff') return 'image/tiff';
+            return '';
+            return '';
+        } catch {
+            return '';
+        }
+    })();
+
+    const imageAlt = seo.ogImageAlt || `${seo.title} — ${globalConfig.siteName}`;
 
     const tags = `
     <title>${seo.title}</title>
@@ -73,14 +109,26 @@ function generateMetaTags(routePath: string): string {
     <meta property="og:title" content="${seo.title}" />
     <meta property="og:description" content="${seo.description}" />
     <meta property="og:url" content="${seo.canonical}" />
-    <meta property="og:image" content="${globalConfig.domain}${seo.ogImage}" />
+    <meta property="og:image" content="${fullImageUrl}" />
+    ${mimeType ? `<meta property="og:image:type" content="${mimeType}" />` : ''}
+    <meta property="og:image:secure_url" content="${fullImageUrl}" />
+    <meta property="og:image:alt" content="${imageAlt}" />
+    ${seo.ogImageWidth ? `<meta property="og:image:width" content="${seo.ogImageWidth}" />` : ''}
+    ${seo.ogImageHeight ? `<meta property="og:image:height" content="${seo.ogImageHeight}" />` : ''}
+    <meta property="og:logo" content="${logoUrl}" />
     <meta property="og:site_name" content="${globalConfig.siteName}" />
     
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="${seo.twitterCard}" />
+    <meta name="twitter:card" content="${twitterCard}" />
     <meta name="twitter:title" content="${seo.title}" />
     <meta name="twitter:description" content="${seo.description}" />
-    <meta name="twitter:image" content="${globalConfig.domain}${seo.ogImage}" />
+    <meta name="twitter:image" content="${fullImageUrl}" />
+    <meta name="twitter:image:alt" content="${imageAlt}" />
+    ${twitterHandle ? `<meta name="twitter:site" content="${twitterHandle}" />` : ''}
+    ${twitterHandle ? `<meta name="twitter:creator" content="${twitterHandle}" />` : ''}
+    <meta property="og:locale" content="${globalConfig.locale || 'en_US'}" />
+    ${seo.schema?.article && seo.sitemap?.lastmod ? `<meta property="article:modified_time" content="${seo.sitemap.lastmod}" />` : ''}
+    ${seo.schema?.article && seo.publishedDate ? `<meta property="article:published_time" content="${seo.publishedDate}" />` : ''}
     
     <!-- Additional SEO -->
     <meta name="robots" content="${globalConfig.defaultRobots}" />
@@ -441,7 +489,7 @@ async function prerender() {
         const routesWithoutSEO: string[] = [];
         const routesWithIncompleteFields: { path: string; missing: string[] }[] = [];
         const routesWithIncompleteSitemap: { path: string; missing: string[] }[] = [];
-        const requiredFields = ['title', 'description', 'canonical', 'ogType', 'ogImage', 'twitterCard'] as const;
+        const requiredFields = ['title', 'description', 'canonical', 'ogType', 'ogImage'] as const;
         type RequiredField = (typeof requiredFields)[number];
         const requiredSitemapFields = ['changefreq', 'priority'] as const;
         type RequiredSitemapField = (typeof requiredSitemapFields)[number];

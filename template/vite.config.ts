@@ -25,20 +25,22 @@ const PROJECT_CONFIG = {
     './src/pages/home.tsx',
     './src/components/Hero.tsx',
   ],
-  
+
   // Manual chunk splitting for vendor libraries
   // Adjust based on your project's dependencies
   vendorChunks: {
-    react: ['react', 'react-dom', 'react-router'],
-    framerMotion: ['framer-motion'],
-    lucideIcons: ['lucide-react'],
-    reactIcons: ['react-icons'],
+    // Vendor chunks
+    'react-vendor': ['react', 'react-dom', 'react-router'],
+    'framer-motion': ['framer-motion'],
+    // Split Lucide icons into separate chunk to enable tree-shaking
+    'lucide-icons': ['lucide-react'],
+    'react-icons': ['react-icons'],
   },
-  
+
   // Beasties (Critical CSS) configuration
   beastiesConfig: {
-    minimumExternalSize: 5000, // If external CSS < 5kb after pruning, inline it all
     inlineThreshold: 0, // Always inline critical CSS
+    minimumExternalSize: 5000, // If external CSS < 5kb after pruning, inline it all
     pruneSource: true, // Remove inlined CSS from external stylesheets
     mergeStylesheets: false, // Keep separate <style> tags for better caching
     preload: 'swap' as const,
@@ -61,7 +63,7 @@ const PROJECT_CONFIG = {
       /^\.hidden$/
     ]
   },
-  
+
   // Terser (Minification) configuration
   terserConfig: {
     passes: 3, // 3-pass compression for maximum size reduction
@@ -129,71 +131,71 @@ export default defineConfig(() => {
   const sharedPlugins = possiblePlugins.filter((plugin): plugin is PluginOption => Boolean(plugin));
 
   const config: UserConfig = {
-  build: {
-    target: 'es2020',
-    cssMinify: 'lightningcss',
-    chunkSizeWarningLimit: 1000,
-    modulePreload: {
-      polyfill: false, // Beasties handles preloading
-    },
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          // Vendor chunks based on PROJECT_CONFIG
-          for (const [chunkName, modules] of Object.entries(PROJECT_CONFIG.vendorChunks)) {
-            if (modules.some(mod => id.includes(`node_modules/${mod}`))) {
-              return chunkName === 'react' ? 'react-vendor' : chunkName;
+    build: {
+      target: 'es2020',
+      cssMinify: 'lightningcss',
+      chunkSizeWarningLimit: 1000,
+      modulePreload: {
+        polyfill: false, // Beasties handles preloading
+      },
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // Vendor chunks based on PROJECT_CONFIG
+            for (const [chunkName, modules] of Object.entries(PROJECT_CONFIG.vendorChunks)) {
+              if (modules.some(mod => id.includes(`node_modules/${mod}`))) {
+                return chunkName;
+              }
             }
           }
         }
+      },
+      minify: 'terser',
+      terserOptions: {
+        parse: {
+          ecma: 2020,
+        },
+        compress: {
+          arrows: true,
+          booleans: true,
+          collapse_vars: true,
+          comparisons: true,
+          dead_code: true,
+          drop_console: PROJECT_CONFIG.terserConfig.dropConsole && isProduction,
+          drop_debugger: PROJECT_CONFIG.terserConfig.dropDebugger,
+          ecma: PROJECT_CONFIG.terserConfig.ecma,
+          hoist_funs: PROJECT_CONFIG.terserConfig.hoist_funs,
+          hoist_props: PROJECT_CONFIG.terserConfig.hoist_props,
+          passes: PROJECT_CONFIG.terserConfig.passes,
+          pure_getters: PROJECT_CONFIG.terserConfig.pure_getters,
+          toplevel: PROJECT_CONFIG.terserConfig.toplevel,
+        },
+        mangle: {
+          safari10: true,
+        },
+        format: {
+          comments: false,
+        },
+        module: true,
+        toplevel: true,
       }
     },
-    minify: 'terser',
-    terserOptions: {
-      parse: {
-        ecma: 2020,
-      },
-      compress: {
-        arrows: true,
-        booleans: true,
-        collapse_vars: true,
-        comparisons: true,
-        dead_code: true,
-        drop_console: PROJECT_CONFIG.terserConfig.dropConsole && isProduction,
-        drop_debugger: PROJECT_CONFIG.terserConfig.dropDebugger,
-        ecma: PROJECT_CONFIG.terserConfig.ecma,
-        hoist_funs: PROJECT_CONFIG.terserConfig.hoist_funs,
-        hoist_props: PROJECT_CONFIG.terserConfig.hoist_props,
-        passes: PROJECT_CONFIG.terserConfig.passes,
-        pure_getters: PROJECT_CONFIG.terserConfig.pure_getters,
-        toplevel: PROJECT_CONFIG.terserConfig.toplevel,
-      },
-      mangle: {
-        safari10: true,
-      },
-      format: {
-        comments: false,
-      },
-      module: true,
-      toplevel: true,
-    }
-  },
-  plugins: sharedPlugins,
-  esbuild: {
-    drop: isProduction ? ['console', 'debugger'] : [],
-    target: 'es2020',
-  },
-  server: {
-    warmup: {
-      clientFiles: PROJECT_CONFIG.warmupFiles,
+    plugins: sharedPlugins,
+    esbuild: {
+      drop: isProduction ? ['console', 'debugger'] : [],
+      target: 'es2020',
     },
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+    server: {
+      warmup: {
+        clientFiles: PROJECT_CONFIG.warmupFiles,
+      },
     },
-    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-  },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+    },
   };
 
   return config;

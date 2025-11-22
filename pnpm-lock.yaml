@@ -7,12 +7,19 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
 
 packages:
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
 
   fs-extra@11.3.2:
     resolution: {integrity: sha512-Xr9F6z6up6Ws+NjzMCZc6WXg2YFRlrLP9NQDO3VQrWrfiojdhS56TzueT88ze0uBdCTwEIhQ3ptnmKeWGFAe0A==}
@@ -29,6 +36,8 @@ packages:
     engines: {node: '>= 10.0.0'}
 
 snapshots:
+
+  dotenv@17.2.3: {}
 
   fs-extra@11.3.2:
     dependencies:
