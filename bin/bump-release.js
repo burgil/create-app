@@ -91,7 +91,7 @@ async function updatePreviousRelease(owner, repo, excludeTag) {
   const prev = list.find(r => r.tag_name !== excludeTag);
   if (!prev) return;
   const id = prev.id;
-  const newName = prev.name?.includes('alpha') ? prev.name : `${prev.name} - alpha`;
+  const newName = prev.name?.includes('alpha') ? prev.name : `${prev.name}`;
   const patchUrl = `https://api.github.com/repos/${owner}/${repo}/releases/${id}`;
   const patch = await fetch(patchUrl, {
     method: 'PATCH',
