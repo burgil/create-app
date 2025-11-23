@@ -50,7 +50,7 @@ async function compressFile(filePath: string) {
       },
     } as BrotliOptions);
     await fs.writeFile(filePath + '.br', br, { mode: 0o644 });
-    console.log(`${colors.green}✔ Compressed${colors.reset}: ${filePath}`);
+    // console.log(`${colors.green}✔ Compressed${colors.reset}: ${filePath}`);
   } catch (err) {
     console.error(`${colors.red}✖ Failed to compress${colors.reset}: ${filePath}`, err);
   }

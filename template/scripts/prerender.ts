@@ -358,7 +358,7 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
         const componentPath = route.componentPath.replace(/\\/g, '/');
         const fileUrl = `file:///${componentPath}`;
 
-        console.log(`${colors.blue}📦 Importing:${colors.reset} ${fileUrl}`);
+        // console.log(`${colors.blue}📦 Importing:${colors.reset} ${fileUrl}`);
 
         const componentModule = await import(fileUrl);
         const Component = componentModule.default;
@@ -381,7 +381,7 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
                     // We wait for onAllReady so Suspense boundaries are resolved
                 },
                 onAllReady() {
-                    console.log(`${colors.green}🔀 Suspense ready for ${route.path}${colors.reset}`);
+                    // console.log(`${colors.green}🔀 Suspense ready for ${route.path}${colors.reset}`);
                     const body = new PassThrough();
                     pipeable.pipe(body);
 
@@ -455,8 +455,8 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
             publicPath: '/',
             preload: 'swap',
             pruneSource: true, // Remove inlined CSS from external stylesheets
-            inlineFonts: true,
-            preloadFonts: true,
+            inlineFonts: false, // Don't inline fonts - let the HTML template handle font loading
+            preloadFonts: false, // Don't preload fonts - let the HTML template handle it
             compress: true,
             logLevel: 'warn', // Reduce noise
             minimumExternalSize: 5000, // If external CSS < 5kb after pruning, inline it all
@@ -477,6 +477,42 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
         });
 
         html = await beasties.process(html);
+
+        // Collect CSS files referenced by HTML or JS bundles
+        try {
+            const referencedCss = new Set<string>();
+            const assetsDir = path.resolve(distPath, 'assets');
+            if (fs.existsSync(assetsDir)) {
+                const jsFiles = fs.readdirSync(assetsDir).filter((f) => /\.(js|mjs|cjs)$/.test(f));
+                const jsCssRegex = /['"]?\/?assets\/([\w\-.@]+\.css)/g;
+                for (const f of jsFiles) {
+                    try {
+                        const contents = fs.readFileSync(path.resolve(assetsDir, f), 'utf8');
+                        let r: RegExpExecArray | null;
+                        while ((r = jsCssRegex.exec(contents)) !== null) {
+                            referencedCss.add(r[1]);
+                        }
+                    } catch (e) {
+                        console.warn(`${colors.yellow}⚠️ Failed to read asset ${f}:${colors.reset}`, e);
+                    }
+                }
+            }
+            // Create placeholder CSS files for any referenced CSS that doesn't exist
+            for (const cssFile of referencedCss) {
+                const cssPath = path.resolve(distPath, 'assets', cssFile);
+                if (!fs.existsSync(cssPath)) {
+                    const placeholder = `/* Placeholder for ${cssFile} - created by prerender */\n`;
+                    try {
+                        fs.writeFileSync(cssPath, placeholder, { flag: 'w' });
+                        console.log(`${colors.yellow}ℹ️  Created placeholder CSS:${colors.reset} ${cssFile}`);
+                    } catch (err) {
+                        console.warn(`${colors.red}⚠️ Failed to create placeholder CSS for ${cssFile}:${colors.reset}`, err);
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn(`${colors.yellow}⚠️ CSS placeholder generation failed:${colors.reset}`, err);
+        }
 
         fs.writeFileSync(outputPath, html);
         console.log(`${colors.green}✅ Generated${colors.reset} ${route.outputPath} with SEO tags + critical CSS`);

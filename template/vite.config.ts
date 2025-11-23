@@ -45,8 +45,8 @@ const PROJECT_CONFIG = {
     mergeStylesheets: false, // Keep separate <style> tags for better caching
     preload: 'swap' as const,
     noscriptFallback: true,
-    inlineFonts: true,
-    preloadFonts: true,
+    inlineFonts: false, // Don't inline fonts - let the HTML template handle font loading
+    preloadFonts: false, // Don't preload fonts - let the HTML template handle it
     compress: true,
     logLevel: 'warn' as const,
     keyframes: 'critical', // Only inline critical animations
