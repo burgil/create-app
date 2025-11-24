@@ -1,4 +1,9 @@
 # Changelog
+## 2.1.0 - 2025-11-24
+
+- Choose your deploy mechanism, CF, Vercel, Netlify
+
+
 ## 2.0.3 - 2025-11-24
 
 - Fixed a paradox silly mistake where the build must be built before preview can run
