@@ -1,4 +1,9 @@
 # Changelog
+## 2.1.1 - 2025-11-24
+
+- Improved the lint command
+
+
 ## 2.1.0 - 2025-11-24
 
 - Choose your deploy mechanism, CF, Vercel, Netlify
