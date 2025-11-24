@@ -1,4 +1,11 @@
 # Changelog
+## 2.0.1 - 2025-11-24
+
+- Remember to read the TOS
+- Fixed bad encoding for the seo.json, apparently UTF8 with BOM breaks JSON idk how that happened
+- Also fixed build errors and improved knip config.
+
+
 
 ## 2.0.0 - 
 
