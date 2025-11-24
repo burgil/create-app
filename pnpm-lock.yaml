@@ -7,13 +7,14 @@ settings:
 importers:
 
   .:
+    dependencies:
+      fs-extra:
+        specifier: ^11.3.2
+        version: 11.3.2
     devDependencies:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
-      fs-extra:
-        specifier: ^11.3.2
-        version: 11.3.2
 
 packages:
 
