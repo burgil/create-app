@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.2 - 2025-11-24
+
+- Knip will no longer show an error of unused scripts
+
+
 ## 2.0.1 - 2025-11-24
 
 - Remember to read the TOS
