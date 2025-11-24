@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.3 - 2025-11-24
+
+- Fixed a paradox silly mistake where the build must be built before preview can run
+
+
 ## 2.0.2 - 2025-11-24
 
 - Knip will no longer show an error of unused scripts
