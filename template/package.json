@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "pnpm lint && pnpm core:build && vite preview",
     "upload": "pnpm build && npx wrangler pages deploy ./dist",
-    "lint": "eslint . && tsc -b && knip --production --dependencies --files",
+    "lint": "eslint . && tsc -b && knip --production --dependencies --files --exports --include-entry-exports",
     "prerender": "tsx --tsconfig tsconfig.app.json scripts/prerender.ts",
     "compress": "tsx --tsconfig tsconfig.app.json scripts/compress.ts",
     "og-screenshots": "python scripts/generate_og_screenshots.py --port 4173 --seo seo.json --cleanup",
