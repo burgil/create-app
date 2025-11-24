@@ -1,3 +1,19 @@
 {
-  "ignore": ["scripts/prerender.ts",  "scripts/compress.ts"]
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignore": [
+    "scripts/*.ts",
+    "unused/**",
+    "dist/**",
+    "public/**",
+    ".github/**",
+    ".agent/**",
+    ".vscode/**",
+    ".cursor/**",
+    "docs/**"
+  ],
+  "workspaces": {
+    "default": {
+      "project": ["./src/**/*.{ts,tsx}"]
+    }
+  }
 }

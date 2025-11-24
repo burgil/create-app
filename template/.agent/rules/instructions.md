@@ -443,3 +443,7 @@ npm create burgil-app my-project
 — -> -
 … -> ...
 ```
+
+## UI/UX Guidelines
+
+- See `../docs/ui-ux-guidelines.md` for the design system, component guidelines, and accessibility checklist.

@@ -35,6 +35,7 @@ npx github:burgil/create-app my-project-name
 - [React Suspense Guide](./template/docs/suspense-guide.md)
 - [React Scan Settings](./template/docs/react-scan-settings.md)
 - [SEO Guide](./template/docs/seo-guide.md)
+ - [UI/UX Guidelines](./template/docs/ui-ux-guidelines.md)
 
 How it works
 ------------
@@ -209,6 +210,11 @@ We welcome contributions!
 This template is provided under the MIT License.
 
 **Usage Terms**: By using this template, you agree to the [Terms of Service](template/TOS.md).
+
+## Repository Notes
+- The `template/` folder contains the starter project that `npx github:burgil/create-app` scaffolds.
+- **`.agent/` (inside `template/`)**: Holds AI agent instructions and rules; used to inform auto-assistants that inspect or modify this repository.
+- **`.github/` (inside `template/`)**: GitHub specific guidance and Copilot instructions (`copilot-instructions.md`). Update these when workflow or automation changes are needed.
 
 ## 🌟 Community
 

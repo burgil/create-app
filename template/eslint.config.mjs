@@ -16,6 +16,7 @@ export default defineConfig(
     ignores: [
       'dist',
       'tools',
+      'unused',
       'vite.config.ts',
       'public',
       '.vscode',

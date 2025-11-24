@@ -108,6 +108,7 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 - **[React Suspense Guide](docs/suspense-guide.md)** - Lazy-loading patterns and best practices
 - **[Customization Guide](docs/customization.md)** - Make it yours
  - **[Generate OG Screenshots](docs/generate-og-screenshots.md)** - How to auto-generate Open Graph images using Playwright and the `scripts/generate_og_screenshots.py` utility
+ - **[UI/UX Guidelines](docs/ui-ux-guidelines.md)** - Design principles, component guidance and accessibility checklist
 
 ## 🎨 Example Pages Included
 
@@ -175,6 +176,10 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 This template is provided under the MIT License. See [LICENSE](LICENSE) for details.
 
 **Usage Terms**: By using this template, you agree to the [Terms of Service](TOS.md).
+
+## Repository Notes
+- **`.agent/`**: AI instructions and agent automation rules used by internal agents. Keep this up-to-date if you expect automated bots to operate in the repo.
+- **`.github/`**: GitHub specific guidance, including `copilot-instructions.md` (Copilot / Copilot Labs hints and macros). Adjust workflows here if you change CI or automation.
 
 ## 🌟 Community
 
