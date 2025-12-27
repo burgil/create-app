@@ -1,7 +1,11 @@
+---
+trigger: always_on
+---
+
 # Create App Template - AI Agent Instructions
 
 ## Project Overview
-This is a highly optimized Vite + React starter template with SSR/SSG capabilities, designed for the create-app CLI. It achieves **99+ mobile / 100 desktop** PageSpeed Insights scores out of the box.
+This is a highly optimized Vite + React starter template with SSR/SSG capabilities, designed for the create-app CLI. It achieves **100 mobile / 100 desktop** PageSpeed Insights scores out of the box.
 
 ---
 
@@ -389,7 +393,7 @@ Before deployment, verify:
 5. ✅ Check PageSpeed Insights: https://pagespeed.web.dev/
 
 **Expected scores:**
-- Mobile: 99
+- Mobile: 100
 - Desktop: 100
 - LCP: < 2.5s
 - CLS: 0

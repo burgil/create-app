@@ -140,7 +140,7 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 - **[SEO Best Practices](template/docs/seo-guide.md)** - Maximize your search rankings
 - **[Deployment Guide](template/docs/deployment.md)** - Ship to production in minutes
 - **[Performance Optimization](template/docs/performance.md)** - Make it even faster
-- **[Optimization Guide](template/docs/optimize.md)** - Advanced performance optimizations (99+ mobile / 100 desktop)
+- **[Optimization Guide](template/docs/optimize.md)** - Advanced performance optimizations (100 mobile / 100 desktop)
 - **[React Suspense Guide](template/docs/suspense-guide.md)** - Lazy-loading patterns and best practices
 - **[Customization Guide](template/docs/customization.md)** - Make it yours
 
@@ -170,7 +170,7 @@ No serverless functions, no Node.js runtime, no hidden costs.
 ## 📊 Real-World Results
 
 ```
-Mobile PageSpeed: 99/100
+Mobile PageSpeed: 100/100
 Desktop PageSpeed: 100/100
 First Contentful Paint: <0.5s
 Largest Contentful Paint: <2.5s

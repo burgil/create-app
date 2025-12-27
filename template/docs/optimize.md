@@ -1,7 +1,7 @@
 # Performance Optimization Guide
 
 ## Overview
-This template includes advanced performance optimizations to achieve **99+ mobile / 100 desktop** PageSpeed Insights scores out of the box.
+This template includes advanced performance optimizations to achieve **100 mobile / 100 desktop** PageSpeed Insights scores out of the box.
 
 ---
 
@@ -9,7 +9,7 @@ This template includes advanced performance optimizations to achieve **99+ mobil
 
 | Metric | Target | How We Achieve It |
 |--------|--------|-------------------|
-| **Mobile** | 99+ | Critical CSS inlining, Terser minification, font-display: optional |
+| **Mobile** | 100 | Critical CSS inlining, Terser minification, font-display: optional |
 | **Desktop** | 100 | Code splitting, compression (gzip + brotli), optimized chunks |
 | **External CSS** | < 1 KB | Beasties prunes and inlines critical CSS |
 | **Critical CSS Inlined** | 40-50 KB | Automated by Beasties during build |
@@ -338,7 +338,7 @@ Opens `dist/stats.html` with interactive visualization showing:
 4. ✅ Check PageSpeed Insights after deployment
 
 ### Expected Results
-- **Mobile Score:** 99
+- **Mobile Score:** 100
 - **Desktop Score:** 100
 - **LCP (Largest Contentful Paint):** < 2.5s
 - **CLS (Cumulative Layout Shift):** 0 (font-display: optional)
@@ -374,7 +374,7 @@ Opens `dist/stats.html` with interactive visualization showing:
 ## 🎉 Summary
 
 **Out-of-the-box performance:**
-- 99+ mobile / 100 desktop PageSpeed score
+- 100 mobile / 100 desktop PageSpeed score
 - 99%+ reduction in external CSS
 - 0ms forced reflow time
 - Zero CLS with `font-display: optional`

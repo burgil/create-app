@@ -1,7 +1,7 @@
 ﻿````instructions
 # Create App Template - GitHub Copilot Instructions
 
-**Project Overview**: Highly optimized Vite + React starter template with SSR/SSG capabilities, achieving **99+ mobile / 100 desktop** PageSpeed Insights scores.
+**Project Overview**: Highly optimized Vite + React starter template with SSR/SSG capabilities, achieving **100 mobile / 100 desktop** PageSpeed Insights scores.
 
 ## Tech Stack
 - **Framework**: Vite 7 + React 19 + TypeScript 5.9
@@ -181,7 +181,7 @@ npm create burgil-app my-project
 ```
 
 ## Performance Targets
-- **Mobile**: 99
+- **Mobile**: 100
 - **Desktop**: 100
 - **LCP**: < 2.5s
 - **CLS**: 0
