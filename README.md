@@ -2,7 +2,9 @@
 
 ![page-speed](page-speed.png)
 
-[PRO VERSION](payhip.com/burgil)
+[PRO VERSION WITH SUPPORT](payhip.com/burgil)
+
+<img width="646" height="132" alt="image" src="https://github.com/user-attachments/assets/c81dc08f-7f64-49b1-a216-db210c7bc8b2" />
 
 > **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
 
