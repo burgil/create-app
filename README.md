@@ -4,7 +4,7 @@
 
 > **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
 
-A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - no servers, no complexity, just pure performance that Google loves.
+A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - **no servers** (SSG), no complexity, just pure performance that Google loves.
 
 ![web-preview](web-preview.png)
 
