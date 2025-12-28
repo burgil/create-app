@@ -4,11 +4,13 @@
 
 [PRO VERSION WITH SUPPORT](payhip.com/burgil)
 
-<img width="646" height="132" alt="image" src="https://github.com/user-attachments/assets/c81dc08f-7f64-49b1-a216-db210c7bc8b2" />
+[LIVE DEMO](https://vite-react-ssg-pro.pages.dev)
 
 > **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
 
 A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - **no servers** (SSG), no complexity, just pure performance that Google loves.
+
+<img width="646" height="132" alt="image" src="https://github.com/user-attachments/assets/c81dc08f-7f64-49b1-a216-db210c7bc8b2" />
 
 ![web-preview](web-preview.png)
 
