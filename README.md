@@ -2,9 +2,7 @@
 
 ![page-speed](page-speed.png)
 
-[PRO VERSION WITH SUPPORT](payhip.com/burgil)
-
-[LIVE DEMO](https://vite-react-ssg-pro.pages.dev)
+[PRO VERSION WITH SUPPORT](payhip.com/burgil) - [LIVE DEMO](https://vite-react-ssg-pro.pages.dev) - [WATCH VIDEO](https://www.reddit.com/user/dev_burgil/comments/1pxvqso/vite_react_ssg_pro_template_fixes_csr_indexing/)
 
 > **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
 
