@@ -2,9 +2,11 @@
 
 ![page-speed](page-speed.png)
 
+[PRO VERSION WITH SUPPORT](payhip.com/burgil) - [LIVE DEMO](https://vite-react-ssg-pro.pages.dev) - [WATCH VIDEO](https://www.reddit.com/user/dev_burgil/comments/1pxvqso/vite_react_ssg_pro_template_fixes_csr_indexing/)
+
 > **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
 
-A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - no servers, no complexity, just pure performance that Google loves.
+A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - **no servers** (SSG), no complexity, just pure performance that Google loves.
 
 ![web-preview](web-preview.png)
 
@@ -54,6 +56,8 @@ Most React apps fail at SEO because they're client-side rendered. Traditional SS
 ✅ **Google Loves It** - Perfect Lighthouse scores out of the box  
 
 ### What Makes This Different
+
+<img width="646" height="132" alt="image" src="https://github.com/user-attachments/assets/c81dc08f-7f64-49b1-a216-db210c7bc8b2" />
 
 | Feature | This Template | Typical React App | Next.js |
 |---------|--------------|-------------------|---------|
