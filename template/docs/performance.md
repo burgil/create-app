@@ -630,4 +630,4 @@ Every external script slows your site:
 
 ---
 
-**Need performance help?** Open an issue on [GitHub](https://github.com/burgil/create-app/issues)
+**Need performance help?** Open an issue on [GitHub](https://github.com/burgil/issues)

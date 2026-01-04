@@ -123,4 +123,3 @@
 - Initial release v1.0.0; Bumped package.json version to 1.0.0; Update README and documentation; Documentation updates; OG screenshot and build scripts improved; Component updates; Page updates; SEO configuration updates; Vite config changes; Lockfile updates. (12015 insertions, 0 deletions)
 - Add a newline for better readability in README; Update README and documentation. (1 insertions, 0 deletions)
 - Update documentation links to point to the correct template directory; Update README and documentation. (6 insertions, 6 deletions)
-

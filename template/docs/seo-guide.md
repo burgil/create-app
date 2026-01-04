@@ -23,7 +23,7 @@ Every page is built as static HTML with all content visible in the source:
 ```html
 <!-- What Google sees: -->
 <main>
-  <h1>Create App Template</h1>
+  <h1>Vite React SSG Pro</h1>
   <p>A minimal Vite + React starter template...</p>
 </main>
 ```
@@ -32,12 +32,12 @@ Every page is built as static HTML with all content visible in the source:
 
 ### 2. Meta Tags
 
-Configured in `seo.json`, injected at build time:
+Configured in `src/seo.json`, injected at build time:
 
 ```json
 {
   "/": {
-    "title": "Create App Template - Vite + React",
+    "title": "Vite React SSG Pro - Vite + React",
     "description": "A minimal Vite + React landing page template",
     "keywords": "vite,react,starter,template"
   }
@@ -46,7 +46,7 @@ Configured in `seo.json`, injected at build time:
 
 **Generated HTML**:
 ```html
-<title>Create App Template - Vite + React</title>
+<title>Vite React SSG Pro - Vite + React</title>
 <meta name="description" content="A minimal Vite + React landing page template">
 <meta name="keywords" content="vite,react,starter,template">
 <link rel="canonical" href="https://example.com/">
@@ -57,7 +57,7 @@ Configured in `seo.json`, injected at build time:
 Perfect social media previews:
 
 ```html
-<meta property="og:title" content="Create App Template">
+<meta property="og:title" content="Vite React SSG Pro">
 <meta property="og:description" content="...">
 <meta property="og:image" content="/images/og/og-home.webp">
 <meta property="og:type" content="website">
@@ -73,7 +73,7 @@ Rich snippets in search results:
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Create App Template",
+  "name": "Vite React SSG Pro",
   "url": "https://example.com",
   "logo": "https://example.com/images/logo.webp",
   "sameAs": [
@@ -89,7 +89,7 @@ Rich snippets in search results:
 
 ### Global Settings
 
-Edit `seo.json` → `_global`:
+Edit `src/seo.json` → `_global`:
 
 ```json
 {
@@ -337,7 +337,7 @@ Avoid:
 
 ### Pre-Launch
 
-- [ ] Set `domain` in `seo.json` to production URL
+- [ ] Set `domain` in `src/seo.json` to production URL
 - [ ] Update all page titles and descriptions
 - [ ] Generate OG images for all pages
 - [ ] Create custom `favicon.ico`
@@ -395,7 +395,7 @@ Paste your page URL and verify all schemas are valid.
 
 ### Breadcrumbs
 
-Add to `seo.json`:
+Add to `src/seo.json`:
 
 ```json
 {
@@ -436,7 +436,7 @@ For multi-language sites:
 <link rel="alternate" hreflang="es" href="https://example.com/es/">
 ```
 
-3. Update `seo.json` per language.
+3. Update `src/seo.json` per language.
 
 ## Common SEO Mistakes
 
@@ -464,4 +464,4 @@ For multi-language sites:
 
 ---
 
-**Need help with SEO?** Open an issue on [GitHub](https://github.com/burgil/create-app/issues)
+**Need help with SEO?** Open an issue on [GitHub](https://github.com/burgil/issues)

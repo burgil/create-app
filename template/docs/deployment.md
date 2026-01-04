@@ -523,4 +523,4 @@ git push --force
 
 ---
 
-**Need deployment help?** Open an issue on [GitHub](https://github.com/burgil/create-app/issues)
+**Need deployment help?** Open an issue on [GitHub](https://github.com/burgil/issues)

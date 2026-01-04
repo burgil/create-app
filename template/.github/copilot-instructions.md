@@ -1,7 +1,7 @@
-﻿````instructions
-# Create App Template - GitHub Copilot Instructions
+````instructions
+# Vite React SSG Pro - GitHub Copilot Instructions
 
-**Project Overview**: Highly optimized Vite + React starter template with SSR/SSG capabilities, achieving **100 mobile / 100 desktop** PageSpeed Insights scores.
+**Project Overview**: Highly optimized Vite + React starter template with SSG (Static Site Generation) capabilities, achieving **100 mobile / 100 desktop** PageSpeed Insights scores. This template is a static site generator (SSG) and does not provide runtime SSR (server-side rendering).
 
 ## Tech Stack
 - **Framework**: Vite 7 + React 19 + TypeScript 5.9
@@ -10,13 +10,13 @@
 - **Animations**: Framer Motion
 - **Icons**: Lucide React + React Icons
 - **Build**: Terser, Lightning CSS, Beasties (critical CSS)
-- **SSR**: Happy-DOM for server-side rendering
+- **SSG**: Prerendering with Happy-DOM for static HTML output (no runtime SSR)
 
 ## Structure
 - **Pages**: `src/pages/` - Route pages (home.tsx, about.tsx)
 - **Components**: `src/components/` - Reusable UI components
 - **Router**: `src/Router.tsx` - Route definitions with lazy loading
-- **Layout**: `src/Layout.tsx` - Suspense wrapper + SEO (prerenderer handles SSR semantics)
+- **Layout**: `src/Layout.tsx` - Suspense wrapper + SEO (prerenderer handles SSG/static semantics)
 - **SEO**: `seo.json` - Metadata for all routes
 - **Scripts**: `scripts/` - Prerender and OG image generation
 - **Docs**: `docs/` - Comprehensive guides (optimize.md, suspense-guide.md, etc.)
@@ -26,7 +26,7 @@
 pnpm dev              # Start dev server (with warmup)
 pnpm build            # Full build: lint  core:build  og-screenshots
 pnpm core:build       # Build + prerender (no OG screenshots)
-pnpm prerender        # Regenerate SSR HTML with critical CSS
+pnpm prerender        # Regenerate SSR/SSG HTML with critical CSS
 pnpm og-screenshots   # Generate OG images from live pages
 pnpm analyze          # Build with bundle analyzer
 pnpm lint             # ESLint + TypeScript + Knip
@@ -52,8 +52,8 @@ pnpm preview          # Preview production build
 - `font-display: optional` for zero CLS
 - Async loading via `media="print"` + `onload`
 
-### 5. SSR (Server-Side Rendering)
-- All routes prerendered to static HTML
+### 5. SSG (Static Site Generation)
+- All routes prerendered to static HTML (no runtime SSR)
 - SEO metadata from `seo.json`
 - Auto-generates `sitemap.xml` and `robots.txt`
 
@@ -106,7 +106,7 @@ const Footer = lazy(() => import('./Footer'));
 
 ### Suspense (from Layout.tsx)
 ```tsx
-// Suspend boundaries are handled automatically during SSR; use Suspense
+// Suspend boundaries are handled automatically during SSG prerendering; use Suspense
 // without manual isSSR checks.
 return <Suspense fallback={<LoadingScreen />}>{content}</Suspense>;
 ```
@@ -164,7 +164,7 @@ python scripts/generate_og_screenshots.py --port 4173 --seo seo.json --cleanup
 - Don't lazy-load above-the-fold content
 - Don't use empty Suspense fallbacks
 - Don't skip SEO metadata
-- Don't use `startTransition` in `main.tsx` (breaks SSR)
+- Don't use `startTransition` in `main.tsx` (breaks SSR/SSG)
 
 ## Documentation
 - **`docs/optimize.md`** - Full optimization guide
@@ -175,7 +175,7 @@ python scripts/generate_og_screenshots.py --port 4173 --seo seo.json --cleanup
 ## Installation
 
 ```bash
-npx github:burgil/create-app my-project
+npx github:burgil/vite-react-ssg-pro my-project
 # or
 npm create burgil-app my-project
 ```
@@ -197,12 +197,12 @@ npm create burgil-app my-project
 ## Avoid cursed strings
 
 ```
-’ -> '
-“ -> "
-” -> "
-– -> -
-— -> -
-… -> ...
+� -> '
+� -> "
+� -> "
+� -> -
+� -> -
+� -> ...
 ```
 
 ## UI/UX Guidelines

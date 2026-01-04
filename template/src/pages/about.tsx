@@ -11,14 +11,14 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-[#020204] font-sans text-white">
-      <PageHeader title="About This Template" description="A clean Vite + React starter template used by the create-app CLI to scaffold new projects." />
+      <PageHeader title="About This Template" description="A production-ready Vite + React 19 template with SSG, achieving 100/100 PageSpeed scores." />
 
       <section className="py-16 container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
           <p className="text-gray-400 mb-8">
             This repository contains a reusable Vite + React template with minimal pages and components to get you started quickly.
           </p>
-          
+
           <div className="grid md:grid-cols-3 gap-6 mt-12">
             {features.map((feature, i) => (
               <motion.div
@@ -39,4 +39,3 @@ export default function AboutPage() {
     </main>
   );
 }
-         

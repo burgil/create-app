@@ -1,33 +1,37 @@
 # Terms of Service
 
-**Last Updated**: November 20, 2025
+**Last Updated**: December 27, 2025
 
 ## 1. Acceptance of Terms
 
 By using, copying, modifying, or distributing this template (the "Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Software.
 
-## 2. License Grant
+## 2. License
 
-This Software is provided under the **MIT License**. You are granted a worldwide, royalty-free, non-exclusive license to:
+### Commercial License (This Version)
 
-- ✅ Use the Software for personal or commercial projects
-- ✅ Copy and distribute the Software
-- ✅ Modify the Software to suit your needs
-- ✅ Sublicense or sell copies of modified versions
+You purchased this template via [Payhip](https://payhip.com/burgil). You are granted:
 
-**Condition**: You must include the original copyright notice and permission notice in all copies or substantial portions of the Software.
+- ✅ Unlimited use in personal and commercial projects
+- ✅ Use in closed-source applications
+- ✅ Building client websites for profit
+- ✅ Creating SaaS products with paid subscriptions
+- ✅ Full modification rights
+- ✅ No attribution required
+- ✅ Ongoing updates and maintenance
+- ✅ Priority support
 
-## 3. Attribution
+### Free Version (Legacy)
 
-While not required by the MIT License, **attribution is appreciated**:
+A free MIT-licensed version exists at [github.com/burgil/create-app](https://github.com/burgil/create-app). Note:
 
-- Keep the "Built with ❤️ for developers" footer (optional)
-- Link back to the original repository (optional)
-- Credit the template in your project documentation (optional)
+- ⚠️ **Unmaintained** - No new features or updates
+- ⚠️ **Legacy code** - Older versions of dependencies
+- ✅ Community support only via GitHub Issues
 
-**Note**: You are **not required** to provide attribution, but it helps others discover this template.
+**For the latest features, updates, and support - use this commercial version.**
 
-## 4. Use Cases
+## 3. Use Cases
 
 ### ✅ Permitted Uses
 
@@ -39,8 +43,8 @@ You **may** use this template for:
 - Marketing landing pages
 - Internal company tools
 - Educational purposes
-- Open source projects
-- Selling modified versions
+- Enterprise applications
+- Any lawful purpose
 
 ### ❌ Prohibited Uses
 
@@ -51,8 +55,9 @@ You **may not** use this template for:
 - Phishing or scam websites
 - Hate speech or harmful content
 - Violating others' intellectual property rights
+- Reselling the unmodified template as your own product
 
-## 5. No Warranty
+## 4. No Warranty
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
 
@@ -63,7 +68,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 **You use this template at your own risk.**
 
-## 6. Limitation of Liability
+## 5. Limitation of Liability
 
 In no event shall the authors or copyright holders be liable for any:
 
@@ -75,7 +80,7 @@ In no event shall the authors or copyright holders be liable for any:
 
 **Maximum Liability**: $0 (zero dollars)
 
-## 7. Third-Party Dependencies
+## 6. Third-Party Dependencies
 
 This template includes third-party libraries (React, Vite, Tailwind CSS, etc.). Each dependency has its own license terms:
 
@@ -89,38 +94,32 @@ This template includes third-party libraries (React, Vite, Tailwind CSS, etc.). 
 
 You are responsible for complying with all third-party licenses.
 
-## 8. Support
+## 7. Support
 
-**No Support Guarantee**: The authors are under no obligation to provide:
+### Commercial License Holders (You)
+- Priority support for issues with the template
+- Contact: [@burgil](https://github.com/burgil)
 
-- Technical support
-- Bug fixes
-- Feature updates
-- Documentation updates
-- Security patches
+### Free MIT Version Users
+- Community support only
+- No guaranteed response time
+- No new updates
 
-**Community Support**: Best-effort support available via:
+## 8. Updates
 
-- GitHub Issues: [github.com/burgil/create-app/issues](https://github.com/burgil/create-app/issues)
-- GitHub Discussions (if enabled)
+As a commercial license holder, you receive:
+
+- ✅ Access to the latest version at time of purchase
+- ✅ Bug fixes and security patches (when available)
+- ✅ Priority consideration for feature requests
 
 ## 9. Modifications to Terms
 
-We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting to the repository.
-
-**Your Responsibility**: Check for updates periodically.
+We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting.
 
 **Continued Use**: Your continued use of the Software after changes constitutes acceptance of the new Terms.
 
-## 10. Contributions
-
-If you contribute code, documentation, or other materials to this project:
-
-- You grant the maintainers a perpetual, worldwide, royalty-free license to use your contributions
-- You confirm you have the right to grant this license
-- Your contributions will be licensed under the same MIT License as the Software
-
-## 11. Privacy
+## 10. Privacy
 
 **No Data Collection**: This template does not collect, store, or transmit any personal data by default.
 
@@ -130,42 +129,23 @@ If you contribute code, documentation, or other materials to this project:
 - You must provide a privacy policy
 - You must obtain user consent where required
 
-## 12. Commercial Use
+## 11. Refunds
 
-You **may** use this template for commercial purposes, including:
+Digital products are non-refundable once delivered. If you experience issues with your purchase, contact us via GitHub.
 
-- Building client websites for profit
-- Creating SaaS products with paid subscriptions
-- Selling modified versions as themes/templates
-- Using in enterprise applications
-
-**No Royalties**: You owe us nothing for commercial use.
-
-## 13. Trademarks
-
-"Create App Template" and related branding are not trademarks. You may not:
-
-- Use the template name in a way that implies endorsement
-- Register similar trademarks
-- Misrepresent the origin of your modified version
-
-**Your Branding**: You are free to rebrand the template entirely for your use.
-
-## 14. Governing Law
+## 12. Governing Law
 
 These Terms are governed by the laws of the jurisdiction where the original authors reside, without regard to conflict of law principles.
 
-**Dispute Resolution**: Any disputes shall be resolved through good-faith negotiation or, if necessary, binding arbitration.
-
-## 15. Severability
+## 13. Severability
 
 If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.
 
-## 16. Entire Agreement
+## 14. Entire Agreement
 
-These Terms, together with the MIT License, constitute the entire agreement between you and the authors regarding the Software.
+These Terms constitute the entire agreement between you and the authors regarding the Software.
 
-## 17. Questions
+## 15. Questions
 
 For questions about these Terms:
 
@@ -179,20 +159,23 @@ For questions about these Terms:
 **In Plain English**:
 
 ✅ **You can**:
-- Use it for anything (personal, commercial, etc.)
+- Use it for anything (personal, commercial, SaaS, client work)
 - Modify it however you want
 - Sell products built with it
+- Keep your source code private
 - Remove all traces of the original template
 
 ❌ **You cannot**:
 - Sue us if something breaks
-- Expect free support
 - Use it for illegal activities
+- Resell the template itself as-is
 
-🎁 **Bonus**:
-- No attribution required (but appreciated!)
-- Free forever
-- No hidden costs or gotchas
+🎁 **What you get**:
+- No attribution required
+- Priority support
+- Unlimited projects
+- Ongoing updates and maintenance
+- Peace of mind for commercial use
 
 ---
 

@@ -10,25 +10,25 @@ Welcome! This guide will get you from zero to deployed in under 10 minutes.
 
 ## Installation
 
-### Option 1: Use the CLI (Recommended)
+### Quick Start
 
 ```bash
-# Create a new project
-npx github:burgil/create-app my-app
-
-# Navigate to your project
+# Extract the template to your project folder, then:
 cd my-app
 
 # Install dependencies
 pnpm install
+
+# Start development
+pnpm dev
 ```
 
-### Option 2: Clone Manually
+### Alternative: Copy to New Location
 
 ```bash
-# Clone the repository
-git clone https://github.com/burgil/create-app.git my-app
-cd my-app/template
+# Copy the template folder to your desired location
+cp -r vite-react-ssg-pro my-new-project
+cd my-new-project
 
 # Install dependencies
 pnpm install
@@ -63,8 +63,8 @@ my-app/
 │   ├── pages/           # Route components
 │   ├── Layout.tsx       # Page wrapper with SEO
 │   ├── Router.tsx       # Route definitions
-│   └── main.tsx         # App entry point
-├── seo.json             # SEO metadata per route
+│   ├── main.tsx         # App entry point
+│   └── seo.json         # SEO metadata per route
 ├── vite.config.ts       # Vite configuration
 └── package.json         # Dependencies and scripts
 ```
@@ -113,7 +113,7 @@ const Contact = lazy(() => import('./pages/contact'));
 3. **Add SEO metadata**:
 
 ```json
-// seo.json
+// src/seo.json
 {
   "/contact": {
     "title": "Contact - My App",
@@ -190,7 +190,7 @@ const appName = import.meta.env.VITE_APP_NAME;
 
 1. **Replace logo**: `public/images/logo.webp`
 2. **Update favicon**: `public/favicon.ico`
-3. **Edit site name**: `seo.json` → `_global.siteName`
+3. **Edit site name**: `src/seo.json` -> `_global.siteName`
 
 ### Change Colors
 
@@ -243,4 +243,4 @@ Cmd/Ctrl + Shift + P → "TypeScript: Restart TS Server"
 
 ---
 
-**Need help?** Open an issue on [GitHub](https://github.com/burgil/create-app/issues)
+**Need help?** Open an issue on [GitHub](https://github.com/burgil/issues)

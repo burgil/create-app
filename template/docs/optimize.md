@@ -1,5 +1,7 @@
 # Performance Optimization Guide
 
+> **Note:** This template is a static site generator (SSG) and does not provide runtime SSR. All pages are prerendered to static HTML at build time.
+
 ## Overview
 This template includes advanced performance optimizations to achieve **100 mobile / 100 desktop** PageSpeed Insights scores out of the box.
 
@@ -153,7 +155,7 @@ pnpm prerender
 # Generate Open Graph images from live pages
 pnpm og-screenshots
 
-# Analyze bundle size (generates dist/stats.html)
+# Analyze bundle size (generates stats.html)
 pnpm run build
 ANALYZE=true pnpm core:build
 ```
@@ -171,7 +173,7 @@ pnpm build
    b. Beasties (inline critical CSS)
    c. Compression (gzip + brotli)
   ↓
-   d. pnpm prerender (SSR all routes with SEO metadata)
+   d. pnpm prerender (SSR/SSG all routes with SEO metadata)
 ```
 
 ---
@@ -274,20 +276,20 @@ terserConfig: {
 
 ---
 
-## 🔍 SSR (Server-Side Rendering) with Prerendering
+## 🔍 SSR/SSG (Server-Side Rendering / Static Site Generation) with Prerendering
 
 ### How It Works
 
 1. `scripts/prerender.ts` reads all routes from `src/Router.tsx`
 2. For each route:
    - Renders React component to HTML string
-   - Injects SEO metadata from `seo.json`
+   - Injects SEO metadata from `src/seo.json`
    - Applies Beasties to inline critical CSS
    - Generates `sitemap.xml` and `robots.txt`
 
-### SSR and Suspense (Prerenderer handling)
+### SSR/SSG and Suspense (Prerenderer handling)
 
-Suspense boundaries are automatically handled during SSR by the prerenderer. You no longer need to detect SSR inside components or conditionally skip Suspense boundaries - the prerenderer will ensure server rendering and client hydration behave correctly.
+Suspense boundaries are automatically handled during SSR/SSG by the prerenderer. You no longer need to detect SSR/SSG inside components or conditionally skip Suspense boundaries - the prerenderer will ensure server rendering and client hydration behave correctly.
 
 ---
 
@@ -299,7 +301,7 @@ View bundle composition with:
 ANALYZE=true pnpm core:build
 ```
 
-Opens `dist/stats.html` with interactive visualization showing:
+Opens `stats.html` with interactive visualization showing:
 - Chunk sizes (raw, gzip, brotli)
 - Module composition
 - Dependency tree

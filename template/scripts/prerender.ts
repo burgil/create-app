@@ -1,3 +1,6 @@
+// This script prerenders all routes to static HTML for SSG (static site generation). It does NOT provide runtime SSR.
+// All output is static and deployable to any static host.
+
 import { createElement } from 'react';
 import { renderToPipeableStream } from 'react-dom/server';
 import { PassThrough } from 'stream';
@@ -16,7 +19,7 @@ const templatePath = path.resolve(__dirname, '../dist/index.html');
 const templateHTML = fs.readFileSync(templatePath, 'utf-8');
 
 // Read SEO configuration
-const seoConfigPath = path.resolve(__dirname, '../seo.json');
+const seoConfigPath = path.resolve(__dirname, '../src/seo.json');
 const seoConfig = JSON.parse(fs.readFileSync(seoConfigPath, 'utf-8'));
 const globalConfig = seoConfig._global;
 
@@ -408,9 +411,9 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
                     try {
                         pipeable.abort();
                     } catch (err) {
-                        console.warn(`${colors.yellow}⚠️ Failed to abort SSR render:${colors.reset}`, err);
+                        console.warn(`${colors.yellow}⚠️ Failed to abort SSR/SSG render:${colors.reset}`, err);
                     }
-                    reject(new Error('SSR render timed out'));
+                    reject(new Error('SSR/SSG render timed out'));
                 }
             }, 30_000);
             // Clear timeout on resolve/reject
@@ -524,22 +527,20 @@ async function prerenderRoute(route: RouteConfig): Promise<void> {
 
 async function prerender() {
     try {
-        console.log(`${colors.bright}${colors.cyan}🚀 Starting SSR prerendering with SEO optimization...${colors.reset}\n`);
+        console.log(`${colors.bright}${colors.cyan}🚀 Starting SSR/SSG prerendering with SEO optimization...${colors.reset}\n`);
 
         const window = new Window();
 
-        // @ts-expect-error - Happy-dom
-        global.window = window;
-        // @ts-expect-error - Happy-dom
-        global.document = window.document;
-        // @ts-expect-error - Happy-dom
-        global.getComputedStyle = window.getComputedStyle.bind(window);
-        // @ts-expect-error - Set SSR flag for components to detect
-        global.__SSR__ = true;
-        // @ts-expect-error - Mirror flag on window/globalThis so components can detect it reliably
-        window.__SSR__ = true;
-        // @ts-expect-error - Ensure globalThis also has the flag for environments referencing it directly
-        globalThis.__SSR__ = true;
+        // Set up DOM globals for SSR with happy-dom
+        const globalAny = global as Record<string, unknown>;
+        globalAny.window = window;
+        globalAny.document = window.document;
+        globalAny.getComputedStyle = window.getComputedStyle.bind(window);
+
+        // Set SSR flags for components to detect
+        (global as unknown as { __SSR__: boolean }).__SSR__ = true;
+        (window as unknown as { __SSR__: boolean }).__SSR__ = true;
+        (globalThis as unknown as { __SSR__: boolean }).__SSR__ = true;
 
         Object.defineProperty(global, 'navigator', {
             value: window.navigator,

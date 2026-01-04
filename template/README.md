@@ -1,8 +1,59 @@
-# ⚡ Create App Template
+# ⚡ Vite React SSG Pro Template
 
-> **The fastest way to ship production-ready React apps with perfect SEO and zero backend costs.**
+> **Note:** Some files (such as config, scripts, or generated files) may be hidden in your editor due to workspace settings in `.vscode/settings.json`. If you don't see a file, check your folder and VS Code settings.
 
-A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - no servers, no complexity, just pure performance that Google loves.
+> **Note:** This template is a static site generator (SSG) that prerenders all routes to static HTML at build time. It does not provide runtime SSR (server-side rendering). All output is fully static and deployable to any static host.
+
+![page-speed](assets/page-speed.png)
+
+> **Skip days of setup. Ship production-ready React apps with perfect SEO and zero backend costs.**
+
+A battle-tested Vite + React template that generates **fully static sites** with server-side rendering (SSR) benefits - but **no servers** (SSG), no complexity, just pure performance that Google loves.
+
+![Web Preview](assets/web-preview.png)
+
+## 📄 License
+
+**Commercial License** - You purchased this template, so you can:
+
+- ✅ Use in unlimited personal and commercial projects
+- ✅ Build client websites for profit
+- ✅ Create SaaS products with paid subscriptions
+- ✅ Use in closed-source applications
+- ✅ Modify and customize freely
+- ✅ No attribution required
+- ✅ **Maintained & Updated** - Get the latest features and fixes
+- ✅ **Priority Support** - Direct help when you need it
+
+**Free MIT version**: https://github.com/burgil/create-app (legacy, unmaintained)  
+**Commercial License**: https://payhip.com/burgil
+
+---
+
+## 🎯 Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server (instant HMR)
+pnpm dev
+
+# Build for production (includes SSG)
+pnpm build
+
+# Preview production build
+pnpm preview
+
+# Optional: OG screenshot generation
+pip install -r scripts/requirements.txt
+playwright install
+pnpm og-screenshots
+```
+
+![CLI Preview](assets/cli-preview.png)
+
+---
 
 ## 🚀 Why This Template is Epic
 
@@ -17,6 +68,8 @@ Most React apps fail at SEO because they're client-side rendered. Traditional SS
 
 ### What Makes This Different
 
+![page-speed](assets/ssg-vs-ssr-vs-csr.png)
+
 | Feature | This Template | Typical React App | Next.js |
 |---------|--------------|-------------------|---------|
 | **Learning Curve** | 🟢 Easy | 🟢 Easy | 🟡 Medium |
@@ -27,6 +80,8 @@ Most React apps fail at SEO because they're client-side rendered. Traditional SS
 | **Build Speed** | ⚡ Instant | ⚡ Fast | 🐌 Slow |
 | **Deploy Anywhere** | ✅ Yes | ✅ Yes | ⚠️ Limited |
 
+---
+
 ## 📦 What's Inside
 
 - **Vite 7** - Sub-100ms HMR, instant dev server startup
@@ -36,40 +91,10 @@ Most React apps fail at SEO because they're client-side rendered. Traditional SS
 - **Framer Motion** - Smooth animations that feel native
 - **Lucide Icons + React Icons** - Beautiful icon libraries
 - **Pre-rendering** - Automatic SSG for perfect SEO
-	- **Pre-rendering** - Automatic SSG for perfect SEO
-	- Suspense handling: The prerenderer handles Suspense during SSR automatically, so you can use `<Suspense>` and `React.lazy()` normally without `isSSR` checks.
 - **OG Image Generation** - Auto-generate Open Graph images
 - **Schema.org** - Rich snippets for better search results
 
-## 🎯 Quick Start
-
-```bash
-# Scaffold a new project
-npx github:burgil/create-app my-epic-app
-
-# Install dependencies
-cd my-epic-app
-pnpm install
-
-# Optional: Install Python requirements for OG screenshot generation
-pip install -r scripts/requirements.txt
-playwright install
-
-# Start dev server (instant HMR)
-pnpm dev
-
-# Build for production (includes SSG)
-pnpm build
-
-# Approve builds (local build + generate assets)
-# This runs the production build and generates OG screenshots
-# Use `pnpm build && pnpm og-screenshots` if you want to follow the full workflow in CI or locally
-# (optional: requires Python, Playwright, and a running preview server for OG generation)
-# pnpm build && pnpm og-screenshots
-
-# Preview production build
-pnpm preview
-```
+---
 
 ## 🏗️ Architecture Highlights
 
@@ -97,41 +122,7 @@ Every page is pre-rendered at build time with full HTML, meta tags, and structur
 - ⚡ **Font optimization** - Zero CLS with font-display: optional
 - ⚡ **CDN-ready** - Serve from edge locations worldwide
 
-## 📚 Documentation
-
-- **[Getting Started](docs/getting-started.md)** - Your first 5 minutes
-- **[Architecture Guide](docs/architecture.md)** - How everything works
-- **[SEO Best Practices](docs/seo-guide.md)** - Maximize your search rankings
-- **[Deployment Guide](docs/deployment.md)** - Ship to production in minutes
-- **[Performance Optimization](docs/performance.md)** - Make it even faster
-- **[Optimization Guide](docs/optimize.md)** - Advanced performance optimizations (100 mobile / 100 desktop)
-- **[React Suspense Guide](docs/suspense-guide.md)** - Lazy-loading patterns and best practices
-- **[Customization Guide](docs/customization.md)** - Make it yours
- - **[Generate OG Screenshots](docs/generate-og-screenshots.md)** - How to auto-generate Open Graph images using Playwright and the `scripts/generate_og_screenshots.py` utility
- - **[UI/UX Guidelines](docs/ui-ux-guidelines.md)** - Design principles, component guidance and accessibility checklist
-
-## 🎨 Example Pages Included
-
-### Home Page
-Shows off Framer Motion animations, Lucide icons, and modern design patterns.
-
-### About Page
-Demonstrates TypeScript best practices, component composition, and accessible UI.
-
-### Suspense Example Page
-Interactive demonstration of React Suspense patterns including lazy loading, skeleton fallbacks, and performance optimization techniques.
-
-## 🚀 Deploy Anywhere
-
-This template generates **100% static files**. Deploy to:
-
-- **Cloudflare Pages** - Free, blazing fast edge network
-- **Vercel** - Zero config deployment
-- **Netlify** - Instant Git integration
-- **GitHub Pages** - Free hosting for open source
-- **Any static host** - Upload dist/ folder, done
-
-No serverless functions, no Node.js runtime, no hidden costs.
+---
 
 ## 📊 Real-World Results
 
@@ -143,6 +134,8 @@ Largest Contentful Paint: <2.5s
 Cumulative Layout Shift: 0
 SEO Score: 💯 100/100
 ```
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -158,6 +151,49 @@ SEO Score: 💯 100/100
 | **Linting** | ESLint 9 + TypeScript ESLint |
 | **Package Manager** | pnpm 10 |
 
+---
+
+## 🚀 Deploy Anywhere
+
+This template generates **100% static files**. Deploy to:
+
+- **Cloudflare Pages** - Free, blazing fast edge network
+- **Vercel** - Zero config deployment
+- **Netlify** - Instant Git integration
+- **GitHub Pages** - Free hosting for open source
+- **Any static host** - Upload dist/ folder, done
+
+No serverless functions, no Node.js runtime, no hidden costs.
+
+---
+
+## 📚 Documentation
+
+- **[Getting Started](docs/getting-started.md)** - Your first 5 minutes
+- **[Architecture Guide](docs/architecture.md)** - How everything works
+- **[SEO Best Practices](docs/seo-guide.md)** - Maximize your search rankings
+- **[Deployment Guide](docs/deployment.md)** - Ship to production in minutes
+- **[Performance Optimization](docs/performance.md)** - Make it even faster
+- **[Optimization Guide](docs/optimize.md)** - Advanced performance optimizations
+- **[React Suspense Guide](docs/suspense-guide.md)** - Lazy-loading patterns
+- **[Customization Guide](docs/customization.md)** - Make it yours
+- **[UI/UX Guidelines](docs/ui-ux-guidelines.md)** - Design best practices
+
+---
+
+## 🎨 Example Pages Included
+
+### Home Page
+Shows off Framer Motion animations, Lucide icons, and modern design patterns.
+
+### About Page
+Demonstrates TypeScript best practices, component composition, and accessible UI.
+
+### Suspense Example Page
+Interactive demonstration of React Suspense patterns including lazy loading, skeleton fallbacks, and performance optimization techniques.
+
+---
+
 ## 💡 Use Cases
 
 Perfect for:
@@ -167,24 +203,15 @@ Perfect for:
 - 📊 **Product pages** - Convert visitors to customers
 - 🎓 **Documentation sites** - Fast, searchable, accessible
 
-## 🤝 Contributing
+---
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 📄 License & Terms
-
-This template is provided under the MIT License. See [LICENSE](LICENSE) for details.
-
-**Usage Terms**: By using this template, you agree to the [Terms of Service](TOS.md).
-
-## Repository Notes
-- **`.agent/`**: AI instructions and agent automation rules used by internal agents. Keep this up-to-date if you expect automated bots to operate in the repo.
-- **`.github/`**: GitHub specific guidance, including `copilot-instructions.md` (Copilot / Copilot Labs hints and macros). Adjust workflows here if you change CI or automation.
-
-## 🌟 Community
+## 🌟 Community & Support
 
 - **GitHub**: [@burgil](https://github.com/burgil)
 - **YouTube**: [@BurgilBuilds](https://youtube.com/@BurgilBuilds)
+- **Commercial Support**: Priority support for license holders
+
+---
 
 ## 🎯 Next Steps
 
@@ -192,6 +219,18 @@ This template is provided under the MIT License. See [LICENSE](LICENSE) for deta
 2. **Customize** colors, fonts, and content in `tailwind.config.js` and `src/`
 3. **Deploy** to Cloudflare Pages or Vercel (takes 2 minutes)
 4. **Ship** your epic project to the world 🚀
+
+---
+
+## 🔄 Updating Dependencies
+
+To update all dependencies to their latest versions, run:
+
+```bash
+pnpm upgrade --latest
+```
+
+This will update your package.json and lockfile to the newest compatible versions.
 
 ---
 
