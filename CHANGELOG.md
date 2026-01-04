@@ -1,4 +1,9 @@
 # Changelog
+## 3.0.0 - 2026-01-04
+
+- v3 will be the final version released for free, for support and guidance please purchase the pro version
+
+
 ## 2.1.1 - 2025-11-24
 
 - Improved the lint command
