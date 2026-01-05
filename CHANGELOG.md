@@ -1,4 +1,10 @@
 # Changelog
+## 1.5.0 - 2026-01-05
+
+- feat: update images and SEO configuration; improve compression and prerendering
+- - Added a new .depcheckrc file to manage dependencies more effectively.
+
+
 ## 3.0.0 - 2026-01-04
 
 - v3 will be the final version released for free, for support and guidance please purchase the pro version
