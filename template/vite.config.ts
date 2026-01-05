@@ -1,10 +1,8 @@
 import { defineConfig, type PluginOption, type UserConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import checker from "vite-plugin-checker";
-import viteCompression from "vite-plugin-compression";
 import Inspect from "vite-plugin-inspect";
 import { qrcode } from "vite-plugin-qrcode";
-import { beasties } from "vite-plugin-beasties";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import tailwindcss from '@tailwindcss/vite';
@@ -28,7 +26,10 @@ const PROJECT_CONFIG = {
   // Adjust based on your project's dependencies
   vendorChunks: {
     // Vendor chunks
-    'react-vendor': ['react', 'react-dom', 'react-router'],
+    'react-router': ['react-router'],
+    // Split React and ReactDOM to isolate the "unused code" diagnostic
+    // (Most unused code is in react-dom's event system/reconciler)
+    'react': ['react', 'react-dom', 'scheduler'],
     'framer-motion': ['framer-motion'],
     // Split Lucide icons into separate chunk to enable tree-shaking
     'lucide-icons': ['lucide-react'],
@@ -39,7 +40,7 @@ const PROJECT_CONFIG = {
   beastiesConfig: {
     inlineThreshold: 0, // Always inline critical CSS
     minimumExternalSize: 5000, // If external CSS < 5kb after pruning, inline it all
-    pruneSource: true, // Remove inlined CSS from external stylesheets
+    pruneSource: false, // Remove inlined CSS from external stylesheets
     mergeStylesheets: false, // Keep separate <style> tags for better caching
     preload: 'swap' as const,
     noscriptFallback: true,
@@ -65,7 +66,7 @@ const PROJECT_CONFIG = {
   // Terser (Minification) configuration
   terserConfig: {
     passes: 3, // 3-pass compression for maximum size reduction
-    dropConsole: true, // Remove console.log in production
+    // dropConsole: true, // Remove console.log in production
     dropDebugger: true,
     ecma: 2020 as const,
     hoist_funs: true,
@@ -85,23 +86,6 @@ export default defineConfig(() => {
     tailwindcss(),
     !isProduction && Inspect(),
     !isProduction && qrcode(),
-    isProduction && beasties({
-      options: {
-        external: true,
-        ...PROJECT_CONFIG.beastiesConfig,
-      },
-    }),
-    // Enable compression only when explicitly requested via env var.
-    // This prevents compressed assets from being generated before prerendering runs.
-    process.env.VITE_BUILD_COMPRESSION === 'true' && viteCompression({
-      algorithm: 'gzip',
-      deleteOriginFile: false,
-    }),
-    process.env.VITE_BUILD_COMPRESSION === 'true' && viteCompression({
-      algorithm: 'brotliCompress',
-      ext: '.br',
-      deleteOriginFile: false,
-    }),
     enableAnalyzer && visualizer({
       filename: 'stats.html',
       gzipSize: true,
@@ -130,6 +114,7 @@ export default defineConfig(() => {
 
   const config: UserConfig = {
     build: {
+      manifest: true, // Generate manifest.json for SSG asset mapping
       target: 'esnext',
       cssMinify: 'lightningcss',
       chunkSizeWarningLimit: 1280,
@@ -141,7 +126,12 @@ export default defineConfig(() => {
           manualChunks(id) {
             // Vendor chunks based on PROJECT_CONFIG
             for (const [chunkName, modules] of Object.entries(PROJECT_CONFIG.vendorChunks)) {
-              if (modules.some(mod => id.includes(`node_modules/${mod}`))) {
+              const isMatch = modules.some(mod => {
+                // Match exact package name in node_modules
+                // Handles both / and \ separators
+                return id.includes(`node_modules/${mod}/`) || id.includes(`node_modules\\${mod}\\`);
+              });
+              if (isMatch) {
                 return chunkName;
               }
             }
@@ -159,7 +149,7 @@ export default defineConfig(() => {
           collapse_vars: true,
           comparisons: true,
           dead_code: true,
-          drop_console: PROJECT_CONFIG.terserConfig.dropConsole && isProduction,
+          drop_console: false, // Keep console logs for debugging
           drop_debugger: PROJECT_CONFIG.terserConfig.dropDebugger,
           ecma: PROJECT_CONFIG.terserConfig.ecma,
           hoist_funs: PROJECT_CONFIG.terserConfig.hoist_funs,
